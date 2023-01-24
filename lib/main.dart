@@ -14,7 +14,7 @@ class ChessApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Pocket Chess Lab',
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(colorSchemeSeed: Colors.brown, useMaterial3: true),
       home: const ChessHomePage(title: 'PocketChessLab.'),
     );
   }
