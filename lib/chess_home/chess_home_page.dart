@@ -16,6 +16,8 @@ class _ChessHomePageState extends State<ChessHomePage> {
 
   BoardColor color = BoardColor.brown;
 
+  PlayerColor boardOrientation = PlayerColor.white;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,20 +66,52 @@ class _ChessHomePageState extends State<ChessHomePage> {
               ),
             ),
           ),
-          IconButton(
-            onPressed: () {
-              controller.resetBoard();
-            },
-            icon: const Icon(
-              Icons.restart_alt_outlined,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    switch (boardOrientation) {
+                      case PlayerColor.white:
+                        boardOrientation = PlayerColor.black;
+                        break;
+                      case PlayerColor.black:
+                        boardOrientation = PlayerColor.white;
+                        break;
+                    }
+                  });
+                },
+                icon: const Icon(
+                  Icons.import_export,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  controller.resetBoard();
+                },
+                icon: const Icon(
+                  Icons.restart_alt_outlined,
+                ),
+              ),
+            ],
           ),
           SingleChildScrollView(
             child: ChessBoard(
               controller: controller,
               boardColor: color,
-              boardOrientation: PlayerColor.white,
+              boardOrientation: boardOrientation,
             ),
+          ),
+          TextButton.icon(
+            onPressed: () {
+              // I have observed that this does not undo pawn moves or captures.
+              controller.undoMove();
+            },
+            icon: const Icon(
+              Icons.undo,
+            ),
+            label: const Text("Undo a consecutive non-pawn/capture move"),
           ),
         ],
       ),
