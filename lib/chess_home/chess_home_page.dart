@@ -64,10 +64,20 @@ class _ChessHomePageState extends State<ChessHomePage> {
               ),
             ),
           ),
-          ChessBoard(
-            controller: controller,
-            boardColor: color,
-            boardOrientation: PlayerColor.white,
+          IconButton(
+            onPressed: () {
+              controller.resetBoard();
+            },
+            icon: const Icon(
+              Icons.restart_alt_outlined,
+            ),
+          ),
+          SingleChildScrollView(
+            child: ChessBoard(
+              controller: controller,
+              boardColor: color,
+              boardOrientation: PlayerColor.white,
+            ),
           ),
         ],
       ),
