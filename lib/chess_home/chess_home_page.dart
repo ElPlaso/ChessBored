@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chess_board/flutter_chess_board.dart';
 
@@ -18,6 +19,8 @@ class _ChessHomePageState extends State<ChessHomePage> {
 
   PlayerColor boardOrientation = PlayerColor.white;
 
+  ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +38,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -112,6 +115,37 @@ class _ChessHomePageState extends State<ChessHomePage> {
               Icons.undo,
             ),
             label: const Text("Undo a consecutive non-pawn/capture move"),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 40,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: CupertinoScrollbar(
+                controller: scrollController,
+                scrollbarOrientation: ScrollbarOrientation.bottom,
+                thumbVisibility: true,
+                thickness: 5,
+                radius: const Radius.circular(20),
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: ValueListenableBuilder<Chess>(
+                    valueListenable: controller,
+                    builder: (context, game, _) {
+                      return Text(
+                        controller.getSan().fold(
+                              '',
+                              (previousValue, element) =>
+                                  '$previousValue ${element ?? ''}',
+                            ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),
