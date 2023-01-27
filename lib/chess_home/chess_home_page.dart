@@ -116,33 +116,32 @@ class _ChessHomePageState extends State<ChessHomePage> {
             ),
             label: const Text("Undo a consecutive non-pawn/capture move"),
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 40,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: CupertinoScrollbar(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: Colors.grey[300],
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: 30,
+              child: SingleChildScrollView(
                 controller: scrollController,
-                scrollbarOrientation: ScrollbarOrientation.bottom,
-                thumbVisibility: true,
-                thickness: 5,
-                radius: const Radius.circular(20),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  child: ValueListenableBuilder<Chess>(
-                    valueListenable: controller,
-                    builder: (context, game, _) {
-                      return Text(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                child: ValueListenableBuilder<Chess>(
+                  valueListenable: controller,
+                  builder: (context, game, _) {
+                    return Center(
+                      child: Text(
                         controller.getSan().fold(
                               '',
                               (previousValue, element) =>
                                   '$previousValue ${element ?? ''}',
                             ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
