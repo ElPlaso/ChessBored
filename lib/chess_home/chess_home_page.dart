@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chess_board/flutter_chess_board.dart';
 
@@ -20,6 +19,14 @@ class _ChessHomePageState extends State<ChessHomePage> {
   PlayerColor boardOrientation = PlayerColor.white;
 
   ScrollController scrollController = ScrollController();
+
+  void scroll() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      curve: Curves.easeInOut,
+      duration: const Duration(seconds: 1),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +111,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
               controller: controller,
               boardColor: color,
               boardOrientation: boardOrientation,
+              onMove: scroll,
             ),
           ),
           TextButton.icon(
@@ -117,32 +125,42 @@ class _ChessHomePageState extends State<ChessHomePage> {
             label: const Text("Undo a consecutive non-pawn/capture move"),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.grey.withOpacity(0.2),
               ),
               width: MediaQuery.of(context).size.width,
               height: 30,
-              child: SingleChildScrollView(
-                controller: scrollController,
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                child: ValueListenableBuilder<Chess>(
-                  valueListenable: controller,
-                  builder: (context, game, _) {
-                    return Center(
-                      child: Text(
-                        controller.getSan().fold(
-                              '',
-                              (previousValue, element) =>
-                                  '$previousValue ${element ?? ''}',
-                            ),
-                      ),
-                    );
-                  },
-                ),
+              child: ValueListenableBuilder<Chess>(
+                valueListenable: controller,
+                builder: (context, game, _) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.only(
+                        top: 5, bottom: 5, left: 5, right: 50),
+                    controller: scrollController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    itemCount: controller.getSan().length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Text(
+                          controller.getSan()[index]!,
+                          style: TextStyle(
+                            color: index % 2 == 0
+                                ? Colors.grey[800]
+                                : Colors.grey[700],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),
