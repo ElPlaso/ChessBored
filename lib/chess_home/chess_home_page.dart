@@ -76,56 +76,8 @@ class _ChessHomePageState extends State<ChessHomePage> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    switch (boardOrientation) {
-                      case PlayerColor.white:
-                        boardOrientation = PlayerColor.black;
-                        break;
-                      case PlayerColor.black:
-                        boardOrientation = PlayerColor.white;
-                        break;
-                    }
-                  });
-                },
-                icon: const Icon(
-                  Icons.import_export,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  controller.resetBoard();
-                },
-                icon: const Icon(
-                  Icons.restart_alt_outlined,
-                ),
-              ),
-            ],
-          ),
-          SingleChildScrollView(
-            child: ChessBoard(
-              controller: controller,
-              boardColor: color,
-              boardOrientation: boardOrientation,
-              onMove: scroll,
-            ),
-          ),
-          TextButton.icon(
-            onPressed: () {
-              // I have observed that this does not undo pawn moves or captures.
-              controller.undoMove();
-            },
-            icon: const Icon(
-              Icons.undo,
-            ),
-            label: const Text("Undo a consecutive non-pawn/capture move"),
-          ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.all(5),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
@@ -162,6 +114,72 @@ class _ChessHomePageState extends State<ChessHomePage> {
                   );
                 },
               ),
+            ),
+          ),
+          SingleChildScrollView(
+            child: ChessBoard(
+              controller: controller,
+              boardColor: color,
+              boardOrientation: boardOrientation,
+              onMove: scroll,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.grey.withOpacity(0.2),
+              ),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.import_export),
+                      onPressed: () {
+                        setState(() {
+                          switch (boardOrientation) {
+                            case PlayerColor.white:
+                              boardOrientation = PlayerColor.black;
+                              break;
+                            case PlayerColor.black:
+                              boardOrientation = PlayerColor.white;
+                              break;
+                          }
+                        });
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.undo),
+                      onPressed: () {
+                        controller.undoMove();
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.redo),
+                      onPressed: () {
+                        // TODO
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.play_arrow),
+                      onPressed: () {
+                        // TODO
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.alarm),
+                      onPressed: () {
+                        // TODO
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        controller.resetBoard();
+                      },
+                    ),
+                  ]),
             ),
           ),
         ],
