@@ -28,6 +28,12 @@ class _ChessHomePageState extends State<ChessHomePage> {
     );
   }
 
+  void changeTheme(BoardColor value) {
+    setState(() {
+      color = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,39 +49,6 @@ class _ChessHomePageState extends State<ChessHomePage> {
       ),
       body: Column(
         children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text("Theme: ",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  DropdownButton<BoardColor>(
-                    value: color,
-                    icon: const Icon(Icons.expand_more),
-                    elevation: 16,
-                    underline: Container(
-                      height: 2,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        color = value!;
-                      });
-                    },
-                    items: BoardColor.values.map((BoardColor value) {
-                      return DropdownMenuItem<BoardColor>(
-                        value: value,
-                        child: Text(value.name),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.all(5),
             child: Container(
@@ -125,10 +98,10 @@ class _ChessHomePageState extends State<ChessHomePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(15),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(15),
                 color: Colors.grey.withOpacity(0.2),
               ),
               child: Row(
@@ -174,6 +147,12 @@ class _ChessHomePageState extends State<ChessHomePage> {
                       },
                     ),
                     IconButton(
+                      icon: const Icon(Icons.palette),
+                      onPressed: () {
+                        _showThemePicker(context, color);
+                      },
+                    ),
+                    IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         controller.resetBoard();
@@ -184,6 +163,62 @@ class _ChessHomePageState extends State<ChessHomePage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showThemePicker(BuildContext context, BoardColor groupValue) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        BoardColor selected = color;
+        return AlertDialog(
+          title: const Text('Theme'),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 250,
+              child: ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: BoardColor.values.length,
+                itemBuilder: (context, index) {
+                  BoardColor boardColor = BoardColor.values[index];
+                  return RadioListTile<BoardColor>(
+                    activeColor: boardColor == BoardColor.brown
+                        ? Colors.brown
+                        : boardColor == BoardColor.darkBrown
+                            ? Colors.brown[900]
+                            : boardColor == BoardColor.orange
+                                ? Colors.orange
+                                : Colors.teal,
+                    title: Text(boardColor.name.toUpperCase()),
+                    value: boardColor,
+                    groupValue: selected,
+                    onChanged: (BoardColor? value) {
+                      setState(() {
+                        changeTheme(value!);
+                        selected = value;
+                      });
+                    },
+                  );
+                },
+              ),
+            );
+          }),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
