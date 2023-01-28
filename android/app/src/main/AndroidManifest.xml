@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pocket_chess_app">
+    package="com.example.chess_bored">
    <application
-        android:label="pocket_chess_app"
+        android:label="ChessBored"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

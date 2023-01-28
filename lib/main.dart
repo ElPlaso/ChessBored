@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pocket_chess_app/chess_home/chess_home_page.dart';
+import 'package:chess_bored/chess_home/chess_home_page.dart';
 
 void main() {
   runApp(const ChessApp());
@@ -13,9 +13,9 @@ class ChessApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Pocket Chess Lab',
+      title: 'ChessBored',
       theme: ThemeData(colorSchemeSeed: Colors.brown, useMaterial3: true),
-      home: const ChessHomePage(title: 'PocketChessLab.'),
+      home: const ChessHomePage(title: 'ChessBored.'),
     );
   }
 }

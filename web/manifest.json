@@ -1,6 +1,6 @@
 {
-    "name": "pocket_chess_app",
-    "short_name": "pocket_chess_app",
+    "name": "chess_bored",
+    "short_name": "chess_bored",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

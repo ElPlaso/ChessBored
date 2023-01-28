@@ -1,4 +1,4 @@
-package com.example.pocket_chess_app
+package com.example.chess_bored
 
 import io.flutter.embedding.android.FlutterActivity
 

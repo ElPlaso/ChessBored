@@ -1,4 +1,4 @@
-# pocket_chess_app
+# chess_bored
 
 A new Flutter project.
 
