@@ -34,7 +34,8 @@ class ThemePickerState extends State<ThemePicker> {
     return BlocBuilder<BoardViewBloc, BoardViewState>(
       builder: (context, state) {
         return SizedBox(
-          width: 200,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const NeverScrollableScrollPhysics(),

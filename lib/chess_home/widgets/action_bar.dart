@@ -1,6 +1,7 @@
 import 'package:chess_bored/chess_home/bloc/board_view_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_game_bloc.dart';
 import 'package:chess_bored/chess_home/controllers/chess_game.dart';
+import 'package:chess_bored/chess_home/widgets/palette_button.dart';
 import 'package:chess_bored/chess_home/widgets/theme_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,12 +65,7 @@ class ActionBar extends StatelessWidget {
                     },
                   ),
                   // Button for changing the board's theme.
-                  IconButton(
-                    icon: const Icon(Icons.palette),
-                    onPressed: () {
-                      _showThemePicker(context, boardViewState);
-                    },
-                  ),
+                  PaletteButton(state: boardViewState),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
@@ -84,32 +80,4 @@ class ActionBar extends StatelessWidget {
       },
     );
   }
-}
-
-/// Opens a dialog box with the [ThemePicker] inside of it.
-Future<void> _showThemePicker(BuildContext context, BoardViewState state) {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext _) {
-      return AlertDialog(
-        content: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: SizedBox(
-            height: 50,
-            child: Center(
-              child: ThemePicker(
-                currentlySelected: state.boardTheme,
-                onSelected: (value) {
-                  context
-                      .read<BoardViewBloc>()
-                      .add(BoardThemeChangedEvent(value));
-                },
-              ),
-            ),
-          ),
-        ),
-      );
-    },
-  );
 }
