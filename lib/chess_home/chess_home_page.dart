@@ -33,7 +33,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         title: Text(
           widget.title,
           style: TextStyle(
@@ -45,6 +45,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
       body: BlocBuilder<BoardViewBloc, BoardViewState>(
         builder: (context, state) {
           return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.all(5),
@@ -53,16 +54,19 @@ class _ChessHomePageState extends State<ChessHomePage> {
                   scrollController: _moveListScrollController,
                 ),
               ),
+              const Spacer(),
               ChessBoard(
                 controller: _controller,
                 boardColor: state.boardTheme,
                 boardOrientation: state.boardOrientation,
                 onMove: _scrollMoveList,
               ),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: ActionBar(controller: _controller),
               ),
+              const Spacer(),
             ],
           );
         },
