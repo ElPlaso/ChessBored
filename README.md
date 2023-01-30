@@ -2,15 +2,15 @@
 
 A new Flutter project.
 
-## Getting Started
+## ChessBored.
 
-This project is a starting point for a Flutter application.
+<img src='https://github.com/ElPlaso/ChessBored/blob/master/assets/icons/icon.png' width=10% height=10%>
 
-A few resources to get you started if this is your first Flutter project:
+A simple chess app made possible by a pre built package (flutter_chess_board).  
+This project aims to create a good user experience as well as provide some extra features such as: 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+* Timed games
+* Playing against a computer
+* Saving games locally for later analysis
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src='https://github.com/ElPlaso/ChessBored/blob/master/github_images/screen_cap.png' width=50% height=50%>
