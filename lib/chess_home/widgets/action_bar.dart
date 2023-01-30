@@ -1,8 +1,8 @@
 import 'package:chess_bored/chess_home/bloc/board_view_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_game_bloc.dart';
 import 'package:chess_bored/chess_home/controllers/chess_game.dart';
+import 'package:chess_bored/chess_home/widgets/clock_button.dart';
 import 'package:chess_bored/chess_home/widgets/palette_button.dart';
-import 'package:chess_bored/chess_home/widgets/theme_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -58,12 +58,7 @@ class ActionBar extends StatelessWidget {
                     },
                   ),
                   // Button to update the clock settings.
-                  IconButton(
-                    icon: const Icon(Icons.alarm),
-                    onPressed: () {
-                      // TODO
-                    },
-                  ),
+                  const ClockButton(),
                   // Button for changing the board's theme.
                   PaletteButton(state: boardViewState),
                   IconButton(
