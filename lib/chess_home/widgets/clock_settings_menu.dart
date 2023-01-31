@@ -1,7 +1,9 @@
+import 'package:chess_bored/chess_home/bloc/chess_clock_bloc.dart';
 import 'package:chess_bored/chess_home/data/chess_clock_settings.dart';
 import 'package:chess_bored/chess_home/widgets/number_selector.dart';
 import 'package:chess_bored/chess_home/widgets/preset_clock_settings_toggle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Menu which allows for selecting a Chess Clock configuration.
 ///
@@ -76,71 +78,107 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: 300,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Presets",
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: PresetClockSettingsToggle(
-              onSelected: _setPreset,
-              isSelected: _isSelected,
-              presetClockSettings: _presetClockSettings,
-            ),
-          ),
-          Text(
-            "Custom",
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return BlocBuilder<ChessClockBloc, ChessClockState>(
+      builder: (context, state) {
+        return AlertDialog(
+          title: const Text('Clock Settings'),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NumberSelector(
-                  itemCount: 61,
-                  onSelected: _setCustomMinutes,
+                Text(
+                  "Presets",
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Text("+", style: Theme.of(context).textTheme.displaySmall),
-                NumberSelector(itemCount: 60, onSelected: _setCustomIncrement),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                  child: PresetClockSettingsToggle(
+                    onSelected: _setPreset,
+                    isSelected: _isSelected,
+                    presetClockSettings: _presetClockSettings,
+                  ),
+                ),
+                Text(
+                  "Custom",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      NumberSelector(
+                        itemCount: 61,
+                        onSelected: _setCustomMinutes,
+                      ),
+                      Text("+",
+                          style: Theme.of(context).textTheme.displaySmall),
+                      NumberSelector(
+                          itemCount: 60, onSelected: _setCustomIncrement),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Minutes per side",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Text(
+                      _minutes.toString(),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Increment in seconds",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Text(
+                      _increment.toString(),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Minutes per side",
-                style: Theme.of(context).textTheme.bodyLarge,
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              Text(
-                _minutes.toString(),
-                style: Theme.of(context).textTheme.bodyLarge,
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Increment in seconds",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              Text(
-                _increment.toString(),
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ],
-          ),
-        ],
-      ),
+              onPressed: _minutes == 0 && _increment == 0
+                  ? null
+                  : () {
+                      context.read<ChessClockBloc>().add(
+                            ClockSetEvent(
+                              ChessClockSettings(_minutes, _increment),
+                            ),
+                          );
+                      Navigator.of(context).pop();
+                    },
+              child: const Text('Done'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

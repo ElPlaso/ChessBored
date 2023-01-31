@@ -1,4 +1,5 @@
 import 'package:chess_bored/chess_home/bloc/board_view_bloc.dart';
+import 'package:chess_bored/chess_home/bloc/chess_clock_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_game_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/game_result_type.dart';
 import 'package:chess_bored/chess_home/controllers/chess_game.dart';
@@ -48,64 +49,90 @@ class _ChessHomePageState extends State<ChessHomePage> {
       ),
       body: BlocBuilder<BoardViewBloc, BoardViewState>(
         builder: (context, state) {
-          return BlocListener<ChessGameBloc, ChessGameState>(
-            listener: (context, state) {
-              if (state is GameOverState) {
-                switch (state.gameResult) {
-                  case GameResultType.checkmate:
-                    // The last move is the checkmating move.
-                    // Every black move is even, and every white move is odd.
-                    if (_chessGame.moveCount % 2 == 0) {
-                      _showGameOverDialog(context, "Black wins by checkmate!");
-                    } else {
-                      _showGameOverDialog(context, "White wins by checkmate!");
+          return BlocBuilder<ChessClockBloc, ChessClockState>(
+            builder: (context, clockState) {
+              return BlocListener<ChessGameBloc, ChessGameState>(
+                listener: (context, state) {
+                  if (state is GameOverState) {
+                    switch (state.gameResult) {
+                      case GameResultType.checkmate:
+                        // The last move is the checkmating move.
+                        // Every black move is even, and every white move is odd.
+                        if (_chessGame.moveCount % 2 == 0) {
+                          _showGameOverDialog(
+                              context, "Black wins by checkmate!");
+                        } else {
+                          _showGameOverDialog(
+                              context, "White wins by checkmate!");
+                        }
+                        break;
+                      case GameResultType.stalemate:
+                        _showGameOverDialog(context, "Draw by stalemate");
+                        break;
+                      case GameResultType.insufficientMaterial:
+                        _showGameOverDialog(
+                            context, "Draw by insufficient material");
+                        break;
+                      case GameResultType.threeFoldRepitition:
+                        _showGameOverDialog(
+                            context, "Draw by three fold repitition");
+                        break;
                     }
-                    break;
-                  case GameResultType.stalemate:
-                    _showGameOverDialog(context, "Draw by stalemate");
-                    break;
-                  case GameResultType.insufficientMaterial:
-                    _showGameOverDialog(
-                        context, "Draw by insufficient material");
-                    break;
-                  case GameResultType.threeFoldRepitition:
-                    _showGameOverDialog(
-                        context, "Draw by three fold repitition");
-                    break;
-                }
-              }
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: MoveList(
+                        controller: _chessGame.controller,
+                        scrollController: _moveListScrollController,
+                      ),
+                    ),
+                    _buildDurationDisplay(
+                      clockState is ChessClockRunningState
+                          ? clockState.blackDuration
+                          : const Duration(seconds: 0),
+                    ),
+                    ChessBoard(
+                      controller: _chessGame.controller,
+                      boardColor: state.boardTheme,
+                      boardOrientation: state.boardOrientation,
+                      onMove: () {
+                        context.read<ChessClockBloc>().add(PlayerMovedEvent());
+                        _scrollMoveList();
+                        _chessGame.moveCount++;
+                      },
+                    ),
+                    _buildDurationDisplay(
+                      clockState is ChessClockRunningState
+                          ? clockState.whiteDuration
+                          : const Duration(seconds: 0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: ActionBar(),
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+              );
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: MoveList(
-                    controller: _chessGame.controller,
-                    scrollController: _moveListScrollController,
-                  ),
-                ),
-                const Spacer(),
-                ChessBoard(
-                  controller: _chessGame.controller,
-                  boardColor: state.boardTheme,
-                  boardOrientation: state.boardOrientation,
-                  onMove: () {
-                    _scrollMoveList();
-                    _chessGame.moveCount++;
-                  },
-                ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: ActionBar(),
-                ),
-                const Spacer(),
-              ],
-            ),
           );
         },
       ),
+    );
+  }
+
+  /// Formats and displays duration as text.
+  Widget _buildDurationDisplay(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return Text(
+      "$minutes:$seconds",
+      style: Theme.of(context).textTheme.displayMedium,
     );
   }
 }
