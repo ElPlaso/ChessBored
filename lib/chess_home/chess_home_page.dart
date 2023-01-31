@@ -82,6 +82,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(5),
@@ -90,11 +91,27 @@ class _ChessHomePageState extends State<ChessHomePage> {
                         scrollController: _moveListScrollController,
                       ),
                     ),
-                    _buildDurationDisplay(
-                      clockState is ChessClockRunningState
-                          ? clockState.blackDuration
-                          : const Duration(seconds: 0),
-                    ),
+                    const Spacer(),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            // Account for swapped orientation.
+                            _buildDurationDisplay(
+                                clockState is ChessClockRunningState
+                                    ? state.boardOrientation ==
+                                            PlayerColor.white
+                                        ? clockState.blackDuration
+                                        : clockState.whiteDuration
+                                    : const Duration(seconds: 0),
+                                _chessGame.moveCount % 2 != 0),
+                            Text(state.boardOrientation == PlayerColor.white
+                                ? "Black"
+                                : "White"),
+                          ],
+                        )),
                     ChessBoard(
                       controller: _chessGame.controller,
                       boardColor: state.boardTheme,
@@ -105,11 +122,27 @@ class _ChessHomePageState extends State<ChessHomePage> {
                         _chessGame.moveCount++;
                       },
                     ),
-                    _buildDurationDisplay(
-                      clockState is ChessClockRunningState
-                          ? clockState.whiteDuration
-                          : const Duration(seconds: 0),
-                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Account for swapped orientation.
+                            Text(state.boardOrientation == PlayerColor.white
+                                ? "White"
+                                : "Black"),
+                            _buildDurationDisplay(
+                                clockState is ChessClockRunningState
+                                    ? state.boardOrientation ==
+                                            PlayerColor.white
+                                        ? clockState.whiteDuration
+                                        : clockState.blackDuration
+                                    : const Duration(seconds: 0),
+                                _chessGame.moveCount % 2 == 0),
+                          ],
+                        )),
+                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(15),
                       child: ActionBar(),
@@ -126,13 +159,20 @@ class _ChessHomePageState extends State<ChessHomePage> {
   }
 
   /// Formats and displays duration as text.
-  Widget _buildDurationDisplay(Duration duration) {
+  Widget _buildDurationDisplay(Duration duration, bool thisTurn) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return Text(
-      "$minutes:$seconds",
-      style: Theme.of(context).textTheme.displayMedium,
+    return OutlinedButton(
+      onPressed: null,
+      style: OutlinedButton.styleFrom(
+          backgroundColor: thisTurn
+              ? Theme.of(context).colorScheme.surfaceVariant
+              : Colors.transparent),
+      child: Text(
+        "$minutes:$seconds",
+        style: Theme.of(context).textTheme.headlineSmall,
+      ),
     );
   }
 }
