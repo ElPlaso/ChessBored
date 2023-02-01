@@ -105,7 +105,9 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                             PlayerColor.white
                                         ? clockState.blackDuration
                                         : clockState.whiteDuration
-                                    : const Duration(seconds: 0),
+                                    : clockState is ChessClockInitial
+                                        ? clockState.initialDuration
+                                        : const Duration(seconds: 0),
                                 state.boardOrientation == PlayerColor.white
                                     ? _chessGame.moveCount % 2 != 0
                                     : true),
@@ -140,7 +142,9 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                             PlayerColor.white
                                         ? clockState.whiteDuration
                                         : clockState.blackDuration
-                                    : const Duration(seconds: 0),
+                                    : clockState is ChessClockInitial
+                                        ? clockState.initialDuration
+                                        : const Duration(seconds: 0),
                                 state.boardOrientation == PlayerColor.white
                                     ? _chessGame.moveCount % 2 == 0
                                     : false),

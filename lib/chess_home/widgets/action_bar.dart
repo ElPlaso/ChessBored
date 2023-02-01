@@ -54,14 +54,24 @@ class ActionBar extends StatelessWidget {
                         },
                       ),
                       // Button to start a game.
-                      IconButton(
-                        icon: const Icon(Icons.play_arrow),
-                        onPressed: () {
-                          chessClockContext
-                              .read<ChessClockBloc>()
-                              .add(ChessClockStartedEvent());
-                        },
-                      ),
+                      (chessClockState is ChessClockInitial ||
+                              chessClockState is ChessClockPausedState
+                          ? IconButton(
+                              icon: const Icon(Icons.play_arrow),
+                              onPressed: () {
+                                chessClockContext
+                                    .read<ChessClockBloc>()
+                                    .add(ChessClockStartedEvent());
+                              },
+                            )
+                          : IconButton(
+                              icon: const Icon(Icons.pause),
+                              onPressed: () {
+                                chessClockContext
+                                    .read<ChessClockBloc>()
+                                    .add(ChessClockPausedEvent());
+                              },
+                            )),
                       // Button to update the clock settings.
                       const ClockButton(),
                       // Button for changing the board's theme.

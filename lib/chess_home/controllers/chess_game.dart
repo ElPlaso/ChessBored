@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_chess_board/flutter_chess_board.dart';
 import 'package:get_it/get_it.dart';
 
@@ -12,7 +13,7 @@ class ChessGameMaker {
 /// Model for the home page's chess game.
 ///
 /// Exposes a [ChessBoardController] and the number of moves made so far.
-class ChessGame {
+class ChessGame extends ChangeNotifier {
   ChessBoardController controller = ChessBoardController();
 
   /// The total number of half moves.
@@ -32,5 +33,6 @@ class ChessGame {
   reset() {
     controller.resetBoard();
     moveCount = 0;
+    notifyListeners();
   }
 }

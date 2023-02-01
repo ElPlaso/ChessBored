@@ -13,13 +13,20 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
   final ChessClockModel _chessClock = GetIt.instance<ChessClockModel>();
   final ChessGame _chessGame = GetIt.instance<ChessGame>();
 
-  ChessClockBloc() : super(ChessClockInitial()) {
+  ChessClockBloc() : super(ChessClockInitial(const Duration(minutes: 0))) {
     _chessClock.addListener(_onChessClockListen);
+    _chessGame.addListener(_onChessGameListen);
     on<ClockSetEvent>(_onClockSet);
     on<ChessClockStartedEvent>(_onChessClockStarted);
     on<PlayerMovedEvent>(_onPlayerMoved);
     on<TimeTickedEvent>(_onTimeTicked);
     on<ChessClockStoppedEvent>(_onChessClockStopped);
+    on<ChessClockPausedEvent>(_onChessClockPaused);
+  }
+
+  _onChessGameListen() {
+    // The game has ended.
+    add(ChessClockStoppedEvent());
   }
 
   _onChessClockListen() {
@@ -35,7 +42,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   _onClockSet(ClockSetEvent event, emit) {
     _chessClock.setClock(event.settings);
-    emit(ChessClockInitial());
+    emit(ChessClockInitial(Duration(minutes: event.settings.startTime)));
   }
 
   _onChessClockStarted(ChessClockStartedEvent event, emit) {
@@ -66,6 +73,15 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   _onChessClockStopped(ChessClockStoppedEvent event, emit) {
     // Reset the clock to an idle state.
-    emit(ChessClockInitial());
+    _chessClock.setClock(_chessClock.currentSettings!);
+    emit(ChessClockInitial(
+      Duration(minutes: _chessClock.currentSettings!.startTime),
+    ));
+  }
+
+  _onChessClockPaused(ChessClockPausedEvent event, emit) {
+    _chessClock.pauseClock();
+    emit(ChessClockPausedState(
+        _chessClock.whiteDuration, _chessClock.blackDuration));
   }
 }
