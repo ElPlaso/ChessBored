@@ -65,6 +65,8 @@ class ChessClockModel extends ChangeNotifier {
                 _blackDuration.inSeconds + _currentSettings!.incrementTime);
       }
     }
+    // Notify listeners immediately, as to get an immediate state change, rather than waiting for the duration.
+    notifyListeners();
     _whiteTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final seconds = _whiteDuration.inSeconds - 1;
       if (seconds <= 0) {
@@ -85,6 +87,8 @@ class ChessClockModel extends ChangeNotifier {
       _whiteDuration = Duration(
           seconds: _whiteDuration.inSeconds + _currentSettings!.incrementTime);
     }
+    // Notify listeners immediately, as to get an immediate state change, rather than waiting for the duration.
+    notifyListeners();
     _blackTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final seconds = _blackDuration.inSeconds - 1;
       if (seconds <= 0) {
