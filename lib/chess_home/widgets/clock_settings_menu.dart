@@ -84,9 +84,10 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
           title: const Text('Clock Settings'),
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 300,
+            height: 400,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
                   "Presets",
@@ -120,33 +121,36 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
                     ],
                   ),
                 ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
                   children: [
-                    Text(
-                      "Minutes per side",
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Minutes per side",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        Text(
+                          _minutes.toString(),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
                     ),
-                    Text(
-                      _minutes.toString(),
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Increment in seconds",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        Text(
+                          _increment.toString(),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
                     ),
                   ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Increment in seconds",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    Text(
-                      _increment.toString(),
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
+                )
               ],
             ),
           ),
@@ -164,7 +168,7 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
               style: TextButton.styleFrom(
                 textStyle: Theme.of(context).textTheme.labelLarge,
               ),
-              onPressed: _minutes == 0 && _increment == 0
+              onPressed: _minutes == 0
                   ? null
                   : () {
                       context.read<ChessClockBloc>().add(
