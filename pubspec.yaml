@@ -41,6 +41,7 @@ dependencies:
   meta: ^1.8.0
   equatable: ^2.0.5
   get_it: ^7.2.0
+  audioplayers: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
   assets:
     - assets/
     - assets/icons/
+    - assets/sounds/move_sound.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

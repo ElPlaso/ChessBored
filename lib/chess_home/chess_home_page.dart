@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chess_board/flutter_chess_board.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 /// Page for the chess board view and state.
 class ChessHomePage extends StatefulWidget {
@@ -21,6 +22,9 @@ class ChessHomePage extends StatefulWidget {
 }
 
 class _ChessHomePageState extends State<ChessHomePage> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  final _moveAudioPath = "sounds/move_sound.mp3";
+
   final ChessGame _chessGame = GetIt.instance<ChessGame>();
 
   final ScrollController _moveListScrollController = ScrollController();
@@ -134,6 +138,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                       boardColor: state.boardTheme,
                       boardOrientation: state.boardOrientation,
                       onMove: () {
+                        _audioPlayer.play(AssetSource(_moveAudioPath));
                         context.read<ChessClockBloc>().add(PlayerMovedEvent());
                         _scrollMoveList();
                         _chessGame.moveCount++;
