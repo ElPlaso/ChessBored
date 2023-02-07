@@ -80,6 +80,13 @@ class _ChessHomePageState extends State<ChessHomePage> {
                         _showGameOverDialog(
                             context, "Draw by three fold repitition");
                         break;
+                      case GameResultType.flagged:
+                        if (_chessGame.moveCount % 2 == 0) {
+                          _showGameOverDialog(context, "Black wins on time");
+                        } else {
+                          _showGameOverDialog(context, "White wins on time");
+                        }
+                        break;
                     }
                   }
                 },

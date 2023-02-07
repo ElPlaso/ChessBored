@@ -14,5 +14,8 @@ class GameEndedByInsufficientMaterialEvent extends ChessGameEvent {}
 /// Event sent when .isThreefoldRepetition()) returns true for the chess board controller.
 class GameEndedByThreeFoldRepititionEvent extends ChessGameEvent {}
 
+/// Event sent when white or black runs out of time.
+class GameEndedByFlag extends ChessGameEvent {}
+
 /// Event to reset the chess game to an initial state.
 class GameRestartedEvent extends ChessGameEvent {}

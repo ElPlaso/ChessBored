@@ -69,8 +69,8 @@ class ChessClockModel extends ChangeNotifier {
     notifyListeners();
     _whiteTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final seconds = _whiteDuration.inSeconds - 1;
-      if (seconds <= 0) {
-        _whiteTimer!.cancel();
+      if (seconds < 0) {
+        pauseClock();
       } else {
         _whiteDuration = Duration(seconds: seconds);
       }
@@ -91,8 +91,8 @@ class ChessClockModel extends ChangeNotifier {
     notifyListeners();
     _blackTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final seconds = _blackDuration.inSeconds - 1;
-      if (seconds <= 0) {
-        _blackTimer!.cancel();
+      if (seconds < 0) {
+        pauseClock();
       } else {
         _blackDuration = Duration(seconds: seconds);
       }

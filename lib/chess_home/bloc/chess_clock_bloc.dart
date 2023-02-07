@@ -30,13 +30,6 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
   }
 
   _onChessClockListen() {
-    if (_chessClock.whiteDuration.inSeconds == 0) {
-      add(ChessClockStoppedEvent());
-      // TODO: handle black victory.
-    } else if (_chessClock.blackDuration.inSeconds == 0) {
-      add(ChessClockStoppedEvent());
-      // TODO: handle white victory.
-    }
     add(TimeTickedEvent());
   }
 
