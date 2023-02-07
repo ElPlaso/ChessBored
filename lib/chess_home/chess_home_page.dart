@@ -50,10 +50,13 @@ class _ChessHomePageState extends State<ChessHomePage> {
       body: BlocBuilder<BoardViewBloc, BoardViewState>(
         builder: (context, state) {
           return BlocBuilder<ChessClockBloc, ChessClockState>(
-            builder: (context, clockState) {
+            builder: (clockContext, clockState) {
               return BlocListener<ChessGameBloc, ChessGameState>(
                 listener: (context, state) {
                   if (state is GameOverState) {
+                    clockContext.read<ChessClockBloc>().add(
+                          ChessClockPausedEvent(),
+                        );
                     switch (state.gameResult) {
                       case GameResultType.checkmate:
                         // The last move is the checkmating move.

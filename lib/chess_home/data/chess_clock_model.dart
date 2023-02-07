@@ -105,7 +105,9 @@ class ChessClockModel extends ChangeNotifier {
   /// This is needed for when games are ended by checkmate or draw.
   /// Or in the event of players choosing to pause the game at any point.
   void pauseClock() {
-    _whiteTimer?.cancel();
-    _blackTimer?.cancel();
+    if (_whiteTimer != null && _blackTimer != null) {
+      _whiteTimer!.cancel();
+      _blackTimer!.cancel();
+    }
   }
 }
