@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 /// Button for opening up the [ClockSettingsMenu].
 class ClockButton extends StatefulWidget {
-  const ClockButton({super.key});
+  final bool disabled;
+  const ClockButton({super.key, required this.disabled});
 
   @override
   State<StatefulWidget> createState() => ClockButtonState();
@@ -14,9 +15,11 @@ class ClockButtonState extends State<ClockButton> {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.alarm),
-      onPressed: () {
-        _showDialog(context);
-      },
+      onPressed: widget.disabled
+          ? null
+          : () {
+              _showDialog(context);
+            },
     );
   }
 

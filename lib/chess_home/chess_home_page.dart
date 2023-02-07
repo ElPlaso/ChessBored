@@ -118,9 +118,12 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                     : clockState is ChessClockInitial
                                         ? clockState.initialDuration
                                         : const Duration(seconds: 0),
-                                state.boardOrientation == PlayerColor.white
-                                    ? _chessGame.moveCount % 2 != 0
-                                    : true),
+                                clockState is! ChessClockRunningState
+                                    ? false
+                                    : state.boardOrientation ==
+                                            PlayerColor.white
+                                        ? _chessGame.moveCount % 2 != 0
+                                        : true),
                             Text(state.boardOrientation == PlayerColor.white
                                 ? "Black"
                                 : "White"),
@@ -135,6 +138,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                         _scrollMoveList();
                         _chessGame.moveCount++;
                       },
+                      enableUserMoves: clockState is! ChessClockPausedState,
                     ),
                     Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -155,9 +159,12 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                     : clockState is ChessClockInitial
                                         ? clockState.initialDuration
                                         : const Duration(seconds: 0),
-                                state.boardOrientation == PlayerColor.white
-                                    ? _chessGame.moveCount % 2 == 0
-                                    : false),
+                                clockState is! ChessClockRunningState
+                                    ? false
+                                    : state.boardOrientation ==
+                                            PlayerColor.white
+                                        ? _chessGame.moveCount % 2 == 0
+                                        : false),
                           ],
                         )),
                     const Spacer(),

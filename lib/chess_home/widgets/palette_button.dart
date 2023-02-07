@@ -7,9 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///
 /// This button displays the pop up menu just above itself.
 class PaletteButton extends StatefulWidget {
+  final bool disabled;
   final BoardViewState state;
 
-  const PaletteButton({super.key, required this.state});
+  const PaletteButton({super.key, required this.state, required this.disabled});
 
   @override
   State<StatefulWidget> createState() => PaletteButtonState();
@@ -38,10 +39,12 @@ class PaletteButtonState extends State<PaletteButton> {
     return IconButton(
       key: _key,
       icon: const Icon(Icons.palette),
-      onPressed: () {
-        _getPosition();
-        _showPopupMenu(context);
-      },
+      onPressed: widget.disabled
+          ? null
+          : () {
+              _getPosition();
+              _showPopupMenu(context);
+            },
     );
   }
 

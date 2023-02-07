@@ -42,16 +42,20 @@ class ActionBar extends StatelessWidget {
                       // Button to undo a move. (non-pawn and non-capture move).
                       IconButton(
                         icon: const Icon(Icons.undo),
-                        onPressed: () {
-                          _chessGame.undo();
-                        },
+                        onPressed: chessClockState is! ChessClockInitial
+                            ? null
+                            : () {
+                                _chessGame.undo();
+                              },
                       ),
                       // Button to redo moves that were undone.
                       IconButton(
                         icon: const Icon(Icons.redo),
-                        onPressed: () {
-                          // TODO
-                        },
+                        onPressed: chessClockState is! ChessClockInitial
+                            ? null
+                            : () {
+                                // TODO
+                              },
                       ),
                       // Button to start a game.
                       (chessClockState is ChessClockInitial &&
@@ -79,9 +83,12 @@ class ActionBar extends StatelessWidget {
                                   },
                                 )),
                       // Button to update the clock settings.
-                      const ClockButton(),
+                      ClockButton(
+                          disabled: chessClockState is! ChessClockInitial),
                       // Button for changing the board's theme.
-                      PaletteButton(state: boardViewState),
+                      PaletteButton(
+                          state: boardViewState,
+                          disabled: chessClockState is! ChessClockInitial),
                       IconButton(
                         icon: const Icon(Icons.close),
                         onPressed: () {
