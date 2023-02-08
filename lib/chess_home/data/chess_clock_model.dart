@@ -83,9 +83,12 @@ class ChessClockModel extends ChangeNotifier {
     // Stop white's time if it's running
     // and increment white's remaining time.
     if (_whiteTimer != null) {
-      _whiteTimer!.cancel();
-      _whiteDuration = Duration(
-          seconds: _whiteDuration.inSeconds + _currentSettings!.incrementTime);
+      if (_whiteTimer!.isActive) {
+        _whiteTimer!.cancel();
+        _whiteDuration = Duration(
+            seconds:
+                _whiteDuration.inSeconds + _currentSettings!.incrementTime);
+      }
     }
     // Notify listeners immediately, as to get an immediate state change, rather than waiting for the duration.
     notifyListeners();
@@ -105,8 +108,12 @@ class ChessClockModel extends ChangeNotifier {
   /// This is needed for when games are ended by checkmate or draw.
   /// Or in the event of players choosing to pause the game at any point.
   void pauseClock() {
-    if (_whiteTimer != null && _blackTimer != null) {
+    if (_whiteTimer != null) {
       _whiteTimer!.cancel();
+    }
+    // Seperate these checks, to account for pausing the clock on the first move,
+    // where whites timer has started but black's hasn't.
+    if (_blackTimer != null) {
       _blackTimer!.cancel();
     }
   }

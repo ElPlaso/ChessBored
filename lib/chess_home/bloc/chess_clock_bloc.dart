@@ -39,9 +39,12 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
   }
 
   _onChessClockStarted(ChessClockStartedEvent event, emit) {
-    // Since white's first to move, and the clock has started,
-    // first start white's time.
-    _chessClock.startWhiteTime();
+    // Black has just played, or no moves have been made, so start white's clock...
+    if (_chessGame.moveCount % 2 == 0) {
+      _chessClock.startWhiteTime();
+    } else {
+      _chessClock.startBlackTime();
+    }
     emit(ChessClockRunningState(
         _chessClock.whiteDuration, _chessClock.blackDuration));
   }
