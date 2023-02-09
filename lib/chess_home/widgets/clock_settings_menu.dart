@@ -170,6 +170,13 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
               ),
               child: const Text('Cancel'),
               onPressed: () {
+                if (state is ChessClockInitial) {
+                  if (state.initialDuration == const Duration(minutes: 0)) {
+                    context
+                        .read<ChessClockBloc>()
+                        .add(ChessClockToggleOnOffEvent());
+                  }
+                }
                 Navigator.of(context).pop();
               },
             ),
