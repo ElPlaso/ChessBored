@@ -42,7 +42,7 @@ class ActionBar extends StatelessWidget {
                       // Button to undo a move. (non-pawn and non-capture move).
                       IconButton(
                         icon: const Icon(Icons.undo),
-                        onPressed: chessClockState is! ChessClockInitial
+                        onPressed: chessClockState is ChessClockRunningState
                             ? null
                             : () {
                                 _chessGame.undo();
@@ -51,7 +51,7 @@ class ActionBar extends StatelessWidget {
                       // Button to redo moves that were undone.
                       IconButton(
                         icon: const Icon(Icons.redo),
-                        onPressed: chessClockState is! ChessClockInitial
+                        onPressed: chessClockState is ChessClockRunningState
                             ? null
                             : () {
                                 // TODO
@@ -59,7 +59,9 @@ class ActionBar extends StatelessWidget {
                       ),
                       // Button to start a game.
                       (chessClockState is ChessClockInitial &&
-                              chessClockState.initialDuration.inMinutes == 0
+                                  chessClockState.initialDuration.inMinutes ==
+                                      0 ||
+                              chessClockState is ChessClockOffState
                           ? const IconButton(
                               icon: Icon(Icons.play_arrow),
                               onPressed: null,
@@ -84,11 +86,11 @@ class ActionBar extends StatelessWidget {
                                 )),
                       // Button to update the clock settings.
                       ClockButton(
-                          disabled: chessClockState is! ChessClockInitial),
+                          disabled: chessClockState is ChessClockRunningState),
                       // Button for changing the board's theme.
                       PaletteButton(
                           state: boardViewState,
-                          disabled: chessClockState is! ChessClockInitial),
+                          disabled: chessClockState is ChessClockRunningState),
                       IconButton(
                         icon: const Icon(Icons.close),
                         onPressed: () {

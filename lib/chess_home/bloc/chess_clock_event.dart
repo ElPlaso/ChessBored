@@ -18,3 +18,5 @@ class PlayerMovedEvent extends ChessClockEvent {}
 class TimeTickedEvent extends ChessClockEvent {}
 
 class ChessClockStoppedEvent extends ChessClockEvent {}
+
+class ChessClockToggleOnOffEvent extends ChessClockEvent {}

@@ -31,3 +31,9 @@ class ChessClockRunningState extends ChessClockState {
 class ChessClockPausedState extends ChessClockRunningState {
   ChessClockPausedState(super.whiteDuration, super.blackDuration);
 }
+
+/// State for when the clock is turned "off", i.e there are no clock settings.
+class ChessClockOffState extends ChessClockState {
+  @override
+  List<Object?> get props => [];
+}

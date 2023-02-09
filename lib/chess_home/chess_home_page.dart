@@ -106,33 +106,34 @@ class _ChessHomePageState extends State<ChessHomePage> {
                       ),
                     ),
                     const Spacer(),
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            // Account for swapped orientation.
-                            _buildDurationDisplay(
-                                clockState is ChessClockRunningState
-                                    ? state.boardOrientation ==
-                                            PlayerColor.white
-                                        ? clockState.blackDuration
-                                        : clockState.whiteDuration
-                                    : clockState is ChessClockInitial
-                                        ? clockState.initialDuration
-                                        : const Duration(seconds: 0),
-                                clockState is! ChessClockRunningState
-                                    ? false
-                                    : state.boardOrientation ==
-                                            PlayerColor.white
-                                        ? _chessGame.moveCount % 2 != 0
-                                        : true),
-                            Text(state.boardOrientation == PlayerColor.white
-                                ? "Black"
-                                : "White"),
-                          ],
-                        )),
+                    if (clockState is! ChessClockOffState)
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              // Account for swapped orientation.
+                              _buildDurationDisplay(
+                                  clockState is ChessClockRunningState
+                                      ? state.boardOrientation ==
+                                              PlayerColor.white
+                                          ? clockState.blackDuration
+                                          : clockState.whiteDuration
+                                      : clockState is ChessClockInitial
+                                          ? clockState.initialDuration
+                                          : const Duration(seconds: 0),
+                                  clockState is! ChessClockRunningState
+                                      ? false
+                                      : state.boardOrientation ==
+                                              PlayerColor.white
+                                          ? _chessGame.moveCount % 2 != 0
+                                          : true),
+                              Text(state.boardOrientation == PlayerColor.white
+                                  ? "Black"
+                                  : "White"),
+                            ],
+                          )),
                     ChessBoard(
                       controller: _chessGame.controller,
                       boardColor: state.boardTheme,
@@ -145,33 +146,34 @@ class _ChessHomePageState extends State<ChessHomePage> {
                       },
                       enableUserMoves: clockState is! ChessClockPausedState,
                     ),
-                    Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Account for swapped orientation.
-                            Text(state.boardOrientation == PlayerColor.white
-                                ? "White"
-                                : "Black"),
-                            _buildDurationDisplay(
-                                clockState is ChessClockRunningState
-                                    ? state.boardOrientation ==
-                                            PlayerColor.white
-                                        ? clockState.whiteDuration
-                                        : clockState.blackDuration
-                                    : clockState is ChessClockInitial
-                                        ? clockState.initialDuration
-                                        : const Duration(seconds: 0),
-                                clockState is! ChessClockRunningState
-                                    ? false
-                                    : state.boardOrientation ==
-                                            PlayerColor.white
-                                        ? _chessGame.moveCount % 2 == 0
-                                        : false),
-                          ],
-                        )),
+                    if (clockState is! ChessClockOffState)
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Account for swapped orientation.
+                              Text(state.boardOrientation == PlayerColor.white
+                                  ? "White"
+                                  : "Black"),
+                              _buildDurationDisplay(
+                                  clockState is ChessClockRunningState
+                                      ? state.boardOrientation ==
+                                              PlayerColor.white
+                                          ? clockState.whiteDuration
+                                          : clockState.blackDuration
+                                      : clockState is ChessClockInitial
+                                          ? clockState.initialDuration
+                                          : const Duration(seconds: 0),
+                                  clockState is! ChessClockRunningState
+                                      ? false
+                                      : state.boardOrientation ==
+                                              PlayerColor.white
+                                          ? _chessGame.moveCount % 2 == 0
+                                          : false),
+                            ],
+                          )),
                     const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(15),

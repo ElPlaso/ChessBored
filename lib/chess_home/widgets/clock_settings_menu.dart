@@ -81,7 +81,19 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
     return BlocBuilder<ChessClockBloc, ChessClockState>(
       builder: (context, state) {
         return AlertDialog(
-          title: const Text('Clock Settings'),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Clock Settings'),
+              Switch(
+                  value: state is ChessClockOffState ? false : true,
+                  onChanged: (_) {
+                    context
+                        .read<ChessClockBloc>()
+                        .add(ChessClockToggleOnOffEvent());
+                  })
+            ],
+          ),
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 400,
@@ -93,13 +105,10 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
                   "Presets",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: PresetClockSettingsToggle(
-                    onSelected: _setPreset,
-                    isSelected: _isSelected,
-                    presetClockSettings: _presetClockSettings,
-                  ),
+                PresetClockSettingsToggle(
+                  onSelected: _setPreset,
+                  isSelected: _isSelected,
+                  presetClockSettings: _presetClockSettings,
                 ),
                 Text(
                   "Custom",

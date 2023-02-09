@@ -13,7 +13,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
   final ChessClockModel _chessClock = GetIt.instance<ChessClockModel>();
   final ChessGame _chessGame = GetIt.instance<ChessGame>();
 
-  ChessClockBloc() : super(ChessClockInitial(const Duration(minutes: 0))) {
+  ChessClockBloc() : super(ChessClockOffState()) {
     _chessClock.addListener(_onChessClockListen);
     _chessGame.addListener(_onChessGameListen);
     on<ClockSetEvent>(_onClockSet);
@@ -22,6 +22,15 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
     on<TimeTickedEvent>(_onTimeTicked);
     on<ChessClockStoppedEvent>(_onChessClockStopped);
     on<ChessClockPausedEvent>(_onChessClockPaused);
+    on<ChessClockToggleOnOffEvent>(_onChessClockToggleOnOff);
+  }
+
+  _onChessClockToggleOnOff(event, emit) {
+    if (state is ChessClockOffState) {
+      emit(ChessClockInitial(_chessClock.whiteDuration));
+    } else {
+      emit(ChessClockOffState());
+    }
   }
 
   _onChessGameListen() {
