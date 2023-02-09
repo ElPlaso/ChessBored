@@ -96,19 +96,23 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
           ),
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 400,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   "Presets",
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                PresetClockSettingsToggle(
-                  onSelected: _setPreset,
-                  isSelected: _isSelected,
-                  presetClockSettings: _presetClockSettings,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: PresetClockSettingsToggle(
+                    disabled: state is ChessClockOffState,
+                    onSelected: _setPreset,
+                    isSelected: _isSelected,
+                    presetClockSettings: _presetClockSettings,
+                  ),
                 ),
                 Text(
                   "Custom",
@@ -120,13 +124,16 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       NumberSelector(
+                        disabled: state is ChessClockOffState,
                         itemCount: 61,
                         onSelected: _setCustomMinutes,
                       ),
                       Text("+",
                           style: Theme.of(context).textTheme.displaySmall),
                       NumberSelector(
-                          itemCount: 60, onSelected: _setCustomIncrement),
+                          disabled: state is ChessClockOffState,
+                          itemCount: 60,
+                          onSelected: _setCustomIncrement),
                     ],
                   ),
                 ),
@@ -140,7 +147,9 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          _minutes.toString(),
+                          state is ChessClockOffState
+                              ? "-"
+                              : _minutes.toString(),
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ],
@@ -153,7 +162,9 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          _increment.toString(),
+                          state is ChessClockOffState
+                              ? "-"
+                              : _increment.toString(),
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ],
@@ -163,40 +174,53 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
               ],
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              child: const Text('Cancel'),
-              onPressed: () {
-                if (state is ChessClockInitial) {
-                  if (state.initialDuration == const Duration(minutes: 0)) {
-                    context
-                        .read<ChessClockBloc>()
-                        .add(ChessClockToggleOnOffEvent());
-                  }
-                }
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.labelLarge,
-              ),
-              onPressed: _minutes == 0
-                  ? null
-                  : () {
-                      context.read<ChessClockBloc>().add(
-                            ClockSetEvent(
-                              ChessClockSettings(_minutes, _increment),
-                            ),
-                          );
+          actions: state is ChessClockOffState
+              ? <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    onPressed: () {
                       Navigator.of(context).pop();
                     },
-              child: const Text('Done'),
-            ),
-          ],
+                    child: const Text('Close'),
+                  ),
+                ]
+              : <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      if (state is ChessClockInitial) {
+                        if (state.initialDuration ==
+                            const Duration(minutes: 0)) {
+                          context
+                              .read<ChessClockBloc>()
+                              .add(ChessClockToggleOnOffEvent());
+                        }
+                      }
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    onPressed: _minutes == 0
+                        ? null
+                        : () {
+                            context.read<ChessClockBloc>().add(
+                                  ClockSetEvent(
+                                    ChessClockSettings(_minutes, _increment),
+                                  ),
+                                );
+                            Navigator.of(context).pop();
+                          },
+                    child: const Text('Done'),
+                  ),
+                ],
         );
       },
     );

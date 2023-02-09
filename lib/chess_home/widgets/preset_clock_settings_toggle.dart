@@ -14,11 +14,15 @@ class PresetClockSettingsToggle extends StatefulWidget {
   /// The list of preset clock settings.
   final List<ChessClockSettings> presetClockSettings;
 
+  /// Whether the buttons can be clicked or not.
+  final bool disabled;
+
   const PresetClockSettingsToggle({
     super.key,
     required this.onSelected,
     required this.isSelected,
     required this.presetClockSettings,
+    required this.disabled,
   });
 
   @override
@@ -52,25 +56,27 @@ class PresetClockSettingsToggleState extends State<PresetClockSettingsToggle> {
           _isSelected.length,
           (index) {
             return OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  // Unselect all the other presets.
-                  for (int i = 0; i < _isSelected.length; i++) {
-                    if (i != index) {
-                      _isSelected[i] = false;
-                    }
-                  }
-                  // If not selected, then select
-                  // else if already selected, then treat as unselect.
-                  _isSelected[index] = !_isSelected[index];
-                });
-                if (_isSelected[index]) {
-                  widget.onSelected(_presetClockSettings[index]);
-                } else {
-                  // Give function a null preset.
-                  widget.onSelected(null);
-                }
-              },
+              onPressed: widget.disabled
+                  ? null
+                  : () {
+                      setState(() {
+                        // Unselect all the other presets.
+                        for (int i = 0; i < _isSelected.length; i++) {
+                          if (i != index) {
+                            _isSelected[i] = false;
+                          }
+                        }
+                        // If not selected, then select
+                        // else if already selected, then treat as unselect.
+                        _isSelected[index] = !_isSelected[index];
+                      });
+                      if (_isSelected[index]) {
+                        widget.onSelected(_presetClockSettings[index]);
+                      } else {
+                        // Give function a null preset.
+                        widget.onSelected(null);
+                      }
+                    },
               style: OutlinedButton.styleFrom(
                   backgroundColor: _isSelected[index]
                       ? Theme.of(context).colorScheme.primary.withOpacity(0.2)

@@ -10,8 +10,14 @@ class NumberSelector extends StatelessWidget {
   /// Function which decides what happens to the selected number.
   final NumberChangedFunction onSelected;
 
+  /// Whether the number selector can be scrolled or not.
+  final bool disabled;
+
   NumberSelector(
-      {super.key, required this.itemCount, required this.onSelected});
+      {super.key,
+      required this.itemCount,
+      required this.onSelected,
+      required this.disabled});
 
   final ScrollController _scrollController = FixedExtentScrollController();
 
@@ -25,9 +31,11 @@ class NumberSelector extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         onSelectedItemChanged: onSelected,
         controller: _scrollController,
-        physics: const FixedExtentScrollPhysics(
-          parent: BouncingScrollPhysics(),
-        ),
+        physics: disabled
+            ? const NeverScrollableScrollPhysics()
+            : const FixedExtentScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
         itemExtent: 50,
         childDelegate: ListWheelChildListDelegate(
           children: List.generate(
