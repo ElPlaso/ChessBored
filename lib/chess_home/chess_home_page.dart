@@ -141,7 +141,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                           : state.boardOrientation ==
                                                   PlayerColor.white
                                               ? _chessGame.moveCount % 2 != 0
-                                              : true),
+                                              : _chessGame.moveCount % 2 == 0),
                                 ),
                                 if (clockState is ChessClockInitial)
                                   Text(
@@ -206,7 +206,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                           : state.boardOrientation ==
                                                   PlayerColor.white
                                               ? _chessGame.moveCount % 2 == 0
-                                              : false),
+                                              : _chessGame.moveCount % 2 != 0),
                                 ],
                               )
                             ],
