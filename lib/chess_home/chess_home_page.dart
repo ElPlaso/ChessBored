@@ -98,11 +98,15 @@ class _ChessHomePageState extends State<ChessHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: MoveList(
-                        controller: _chessGame.controller,
-                        scrollController: _moveListScrollController,
+                    RotatedBox(
+                      quarterTurns:
+                          state.boardOrientation == PlayerColor.black ? 2 : 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: MoveList(
+                          controller: _chessGame.controller,
+                          scrollController: _moveListScrollController,
+                        ),
                       ),
                     ),
                     const Spacer(),
