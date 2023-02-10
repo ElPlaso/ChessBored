@@ -108,15 +108,20 @@ class _ChessHomePageState extends State<ChessHomePage> {
                     const Spacer(),
                     if (clockState is! ChessClockOffState)
                       Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              // Account for swapped orientation.
-                              Row(
-                                children: [
-                                  _buildDurationDisplay(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            // Account for swapped orientation.
+                            Row(
+                              children: [
+                                RotatedBox(
+                                  quarterTurns:
+                                      clockState is ChessClockRunningState
+                                          ? 2
+                                          : 0,
+                                  child: _buildDurationDisplay(
                                       clockState is ChessClockRunningState
                                           ? state.boardOrientation ==
                                                   PlayerColor.white
@@ -133,18 +138,25 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                                   PlayerColor.white
                                               ? _chessGame.moveCount % 2 != 0
                                               : true),
-                                  if (clockState is ChessClockInitial)
-                                    Text(
-                                      "  + ${clockState.settings.incrementTime}",
-                                    ),
-                                ],
-                              ),
+                                ),
+                                if (clockState is ChessClockInitial)
+                                  Text(
+                                    "  + ${clockState.settings.incrementTime}",
+                                  ),
+                              ],
+                            ),
 
-                              Text(state.boardOrientation == PlayerColor.white
-                                  ? "Black"
-                                  : "White"),
-                            ],
-                          )),
+                            RotatedBox(
+                              quarterTurns:
+                                  clockState is ChessClockRunningState ? 2 : 0,
+                              child: Text(
+                                  state.boardOrientation == PlayerColor.white
+                                      ? "Black"
+                                      : "White"),
+                            ),
+                          ],
+                        ),
+                      ),
                     ChessBoard(
                       controller: _chessGame.controller,
                       boardColor: state.boardTheme,
