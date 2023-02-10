@@ -114,21 +114,32 @@ class _ChessHomePageState extends State<ChessHomePage> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               // Account for swapped orientation.
-                              _buildDurationDisplay(
-                                  clockState is ChessClockRunningState
-                                      ? state.boardOrientation ==
-                                              PlayerColor.white
-                                          ? clockState.blackDuration
-                                          : clockState.whiteDuration
-                                      : clockState is ChessClockInitial
-                                          ? clockState.initialDuration
-                                          : const Duration(seconds: 0),
-                                  clockState is! ChessClockRunningState
-                                      ? false
-                                      : state.boardOrientation ==
-                                              PlayerColor.white
-                                          ? _chessGame.moveCount % 2 != 0
-                                          : true),
+                              Row(
+                                children: [
+                                  _buildDurationDisplay(
+                                      clockState is ChessClockRunningState
+                                          ? state.boardOrientation ==
+                                                  PlayerColor.white
+                                              ? clockState.blackDuration
+                                              : clockState.whiteDuration
+                                          : clockState is ChessClockInitial
+                                              ? Duration(
+                                                  minutes: clockState
+                                                      .settings.startTime)
+                                              : const Duration(seconds: 0),
+                                      clockState is! ChessClockRunningState
+                                          ? false
+                                          : state.boardOrientation ==
+                                                  PlayerColor.white
+                                              ? _chessGame.moveCount % 2 != 0
+                                              : true),
+                                  if (clockState is ChessClockInitial)
+                                    Text(
+                                      "  + ${clockState.settings.incrementTime}",
+                                    ),
+                                ],
+                              ),
+
                               Text(state.boardOrientation == PlayerColor.white
                                   ? "Black"
                                   : "White"),
@@ -157,21 +168,31 @@ class _ChessHomePageState extends State<ChessHomePage> {
                               Text(state.boardOrientation == PlayerColor.white
                                   ? "White"
                                   : "Black"),
-                              _buildDurationDisplay(
-                                  clockState is ChessClockRunningState
-                                      ? state.boardOrientation ==
-                                              PlayerColor.white
-                                          ? clockState.whiteDuration
-                                          : clockState.blackDuration
-                                      : clockState is ChessClockInitial
-                                          ? clockState.initialDuration
-                                          : const Duration(seconds: 0),
-                                  clockState is! ChessClockRunningState
-                                      ? false
-                                      : state.boardOrientation ==
-                                              PlayerColor.white
-                                          ? _chessGame.moveCount % 2 == 0
-                                          : false),
+                              Row(
+                                children: [
+                                  if (clockState is ChessClockInitial)
+                                    Text(
+                                      "+ ${clockState.settings.incrementTime}  ",
+                                    ),
+                                  _buildDurationDisplay(
+                                      clockState is ChessClockRunningState
+                                          ? state.boardOrientation ==
+                                                  PlayerColor.white
+                                              ? clockState.whiteDuration
+                                              : clockState.blackDuration
+                                          : clockState is ChessClockInitial
+                                              ? Duration(
+                                                  minutes: clockState
+                                                      .settings.startTime)
+                                              : const Duration(seconds: 0),
+                                      clockState is! ChessClockRunningState
+                                          ? false
+                                          : state.boardOrientation ==
+                                                  PlayerColor.white
+                                              ? _chessGame.moveCount % 2 == 0
+                                              : false),
+                                ],
+                              )
                             ],
                           )),
                     const Spacer(),

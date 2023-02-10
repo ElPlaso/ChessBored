@@ -17,7 +17,7 @@ class ChessClockMaker {
 /// Allows for setting, starting, and pausing the clock.
 class ChessClockModel extends ChangeNotifier {
   /// Keeps track of the current clock settings.
-  ChessClockSettings? _currentSettings;
+  ChessClockSettings _currentSettings = ChessClockSettings(0, 0);
 
   /// White's remaining time.
   Duration _whiteDuration = const Duration(minutes: 0);
@@ -40,7 +40,7 @@ class ChessClockModel extends ChangeNotifier {
   /// Exposes the current clock settings.
   ///
   /// This is useful for resetting the clock once a game has ended.
-  ChessClockSettings? get currentSettings => _currentSettings;
+  ChessClockSettings get currentSettings => _currentSettings;
 
   /// Set/reset the initial time settings.
   void setClock(ChessClockSettings settings) {
@@ -61,8 +61,7 @@ class ChessClockModel extends ChangeNotifier {
       if (_blackTimer!.isActive) {
         _blackTimer!.cancel();
         _blackDuration = Duration(
-            seconds:
-                _blackDuration.inSeconds + _currentSettings!.incrementTime);
+            seconds: _blackDuration.inSeconds + _currentSettings.incrementTime);
       }
     }
     // Notify listeners immediately, as to get an immediate state change, rather than waiting for the duration.
@@ -86,8 +85,7 @@ class ChessClockModel extends ChangeNotifier {
       if (_whiteTimer!.isActive) {
         _whiteTimer!.cancel();
         _whiteDuration = Duration(
-            seconds:
-                _whiteDuration.inSeconds + _currentSettings!.incrementTime);
+            seconds: _whiteDuration.inSeconds + _currentSettings.incrementTime);
       }
     }
     // Notify listeners immediately, as to get an immediate state change, rather than waiting for the duration.

@@ -5,12 +5,12 @@ abstract class ChessClockState extends Equatable {}
 /// State for when the clock is idle.
 class ChessClockInitial extends ChessClockState {
   // Used to show the clock start time settings when a game isn't in play.
-  final Duration initialDuration;
+  final ChessClockSettings settings;
 
-  ChessClockInitial(this.initialDuration);
+  ChessClockInitial(this.settings);
 
   @override
-  List<Object?> get props => [initialDuration];
+  List<Object?> get props => [settings];
 }
 
 /// State for when the clock is running.

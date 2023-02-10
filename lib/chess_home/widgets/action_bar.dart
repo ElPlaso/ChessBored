@@ -59,8 +59,7 @@ class ActionBar extends StatelessWidget {
                       ),
                       // Button to start a game.
                       (chessClockState is ChessClockInitial &&
-                                  chessClockState.initialDuration.inMinutes ==
-                                      0 ||
+                                  chessClockState.settings.startTime == 0 ||
                               chessClockState is ChessClockOffState
                           ? const IconButton(
                               icon: Icon(Icons.play_arrow),

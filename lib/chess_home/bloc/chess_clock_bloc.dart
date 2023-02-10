@@ -27,7 +27,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   _onChessClockToggleOnOff(event, emit) {
     if (state is ChessClockOffState) {
-      emit(ChessClockInitial(_chessClock.whiteDuration));
+      emit(ChessClockInitial(_chessClock.currentSettings));
     } else {
       emit(ChessClockOffState());
     }
@@ -44,7 +44,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   _onClockSet(ClockSetEvent event, emit) {
     _chessClock.setClock(event.settings);
-    emit(ChessClockInitial(Duration(minutes: event.settings.startTime)));
+    emit(ChessClockInitial(event.settings));
   }
 
   _onChessClockStarted(ChessClockStartedEvent event, emit) {
@@ -78,19 +78,17 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   _onChessClockStopped(ChessClockStoppedEvent event, emit) {
     // Reset the clock to an idle state.
-    if (_chessClock.currentSettings != null) {
-      _chessClock.setClock(_chessClock.currentSettings!);
-      emit(ChessClockInitial(
-        Duration(minutes: _chessClock.currentSettings!.startTime),
-      ));
-    }
+    _chessClock.setClock(_chessClock.currentSettings);
+    emit(
+      ChessClockInitial(
+        _chessClock.currentSettings,
+      ),
+    );
   }
 
   _onChessClockPaused(ChessClockPausedEvent event, emit) {
-    if (_chessClock.currentSettings != null) {
-      _chessClock.pauseClock();
-      emit(ChessClockPausedState(
-          _chessClock.whiteDuration, _chessClock.blackDuration));
-    }
+    _chessClock.pauseClock();
+    emit(ChessClockPausedState(
+        _chessClock.whiteDuration, _chessClock.blackDuration));
   }
 }
