@@ -79,11 +79,13 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
   _onChessClockStopped(ChessClockStoppedEvent event, emit) {
     // Reset the clock to an idle state.
     _chessClock.setClock(_chessClock.currentSettings);
-    emit(
-      ChessClockInitial(
-        _chessClock.currentSettings,
-      ),
-    );
+    if (state is! ChessClockOffState) {
+      emit(
+        ChessClockInitial(
+          _chessClock.currentSettings,
+        ),
+      );
+    }
   }
 
   _onChessClockPaused(ChessClockPausedEvent event, emit) {
