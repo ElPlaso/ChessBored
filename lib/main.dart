@@ -22,7 +22,8 @@ class ChessApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<BoardViewBloc>(
-          create: (BuildContext context) => BoardViewBloc(),
+          create: (BuildContext context) =>
+              BoardViewBloc()..add(BoardThemeLoadedEvent()),
         ),
         BlocProvider<ChessGameBloc>(
           create: (BuildContext context) => ChessGameBloc(),
