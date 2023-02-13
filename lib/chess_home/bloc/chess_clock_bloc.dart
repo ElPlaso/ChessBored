@@ -5,6 +5,8 @@ import 'package:chess_bored/chess_home/data/chess_clock_settings.dart';
 import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:localstorage/localstorage.dart';
+
 part 'chess_clock_event.dart';
 part 'chess_clock_state.dart';
 
@@ -13,9 +15,12 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
   final ChessClockModel _chessClock = GetIt.instance<ChessClockModel>();
   final ChessGame _chessGame = GetIt.instance<ChessGame>();
 
+  final LocalStorage _storage = LocalStorage('chess_clock.json');
+
   ChessClockBloc() : super(ChessClockOffState()) {
     _chessClock.addListener(_onChessClockListen);
     _chessGame.addListener(_onChessGameListen);
+    on<ClockSettingsLoadedEvent>(_onClockSettingsLoaded);
     on<ClockSetEvent>(_onClockSet);
     on<ChessClockStartedEvent>(_onChessClockStarted);
     on<PlayerMovedEvent>(_onPlayerMoved);
@@ -23,6 +28,21 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
     on<ChessClockStoppedEvent>(_onChessClockStopped);
     on<ChessClockPausedEvent>(_onChessClockPaused);
     on<ChessClockToggleOnOffEvent>(_onChessClockToggleOnOff);
+  }
+
+  _onClockSettingsLoaded(event, emit) async {
+    if (await _storage.ready) {
+      var settings = _storage.getItem('clock_settings');
+      if (settings != null) {
+        _chessClock.setClock((ChessClockSettings(
+            settings['startTime'], settings['incrementTime'])));
+        emit(
+          ChessClockInitial(
+            _chessClock.currentSettings,
+          ),
+        );
+      }
+    }
   }
 
   _onChessClockToggleOnOff(event, emit) {
@@ -45,6 +65,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
   _onClockSet(ClockSetEvent event, emit) {
     _chessClock.setClock(event.settings);
     emit(ChessClockInitial(event.settings));
+    _saveSettingsToStorage(event.settings);
   }
 
   _onChessClockStarted(ChessClockStartedEvent event, emit) {
@@ -92,5 +113,12 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
     _chessClock.pauseClock();
     emit(ChessClockPausedState(
         _chessClock.whiteDuration, _chessClock.blackDuration));
+  }
+
+  _saveSettingsToStorage(ChessClockSettings settings) {
+    _storage.setItem(
+      'clock_settings',
+      settings.toJSONEncodable(),
+    );
   }
 }

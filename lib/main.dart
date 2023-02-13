@@ -29,7 +29,8 @@ class ChessApp extends StatelessWidget {
           create: (BuildContext context) => ChessGameBloc(),
         ),
         BlocProvider<ChessClockBloc>(
-          create: (BuildContext context) => ChessClockBloc(),
+          create: (BuildContext context) =>
+              ChessClockBloc()..add(ClockSettingsLoadedEvent()),
         ),
       ],
       child: MaterialApp(

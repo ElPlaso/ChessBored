@@ -4,6 +4,15 @@ class ChessClockSettings {
   final int incrementTime;
 
   ChessClockSettings(this.startTime, this.incrementTime);
+
+  toJSONEncodable() {
+    Map<String, dynamic> m = {};
+
+    m['startTime'] = startTime;
+    m['incrementTime'] = incrementTime;
+
+    return m;
+  }
 }
 
 /// Class for getting the list of predefined clock settings.

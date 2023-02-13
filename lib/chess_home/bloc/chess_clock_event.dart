@@ -3,6 +3,8 @@ part of 'chess_clock_bloc.dart';
 /// An event sent to the Chess Clock Bloc.
 abstract class ChessClockEvent {}
 
+class ClockSettingsLoadedEvent extends ChessClockEvent {}
+
 class ClockSetEvent extends ChessClockEvent {
   final ChessClockSettings settings;
 
