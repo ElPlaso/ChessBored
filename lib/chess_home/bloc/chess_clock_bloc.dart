@@ -50,6 +50,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
       emit(ChessClockInitial(_chessClock.currentSettings));
     } else {
       emit(ChessClockOffState());
+      _saveSettingsToStorage(null);
     }
   }
 
@@ -115,10 +116,17 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
         _chessClock.whiteDuration, _chessClock.blackDuration));
   }
 
-  _saveSettingsToStorage(ChessClockSettings settings) {
-    _storage.setItem(
-      'clock_settings',
-      settings.toJSONEncodable(),
-    );
+  _saveSettingsToStorage(ChessClockSettings? settings) {
+    if (settings != null) {
+      _storage.setItem(
+        'clock_settings',
+        settings.toJSONEncodable(),
+      );
+    } else {
+      _storage.setItem(
+        'clock_settings',
+        null,
+      );
+    }
   }
 }
