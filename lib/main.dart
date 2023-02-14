@@ -26,7 +26,8 @@ class ChessApp extends StatelessWidget {
               BoardViewBloc()..add(BoardThemeLoadedEvent()),
         ),
         BlocProvider<ChessGameBloc>(
-          create: (BuildContext context) => ChessGameBloc(),
+          create: (BuildContext context) =>
+              ChessGameBloc()..add(GameLoadedEvent()),
         ),
         BlocProvider<ChessClockBloc>(
           create: (BuildContext context) =>
