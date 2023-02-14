@@ -109,7 +109,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                   }
                 },
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     RotatedBox(
@@ -123,7 +123,6 @@ class _ChessHomePageState extends State<ChessHomePage> {
                         ),
                       ),
                     ),
-                    const Spacer(),
                     if (clockState is! ChessClockOffState)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -220,12 +219,10 @@ class _ChessHomePageState extends State<ChessHomePage> {
                               )
                             ],
                           )),
-                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(15),
                       child: ActionBar(),
                     ),
-                    const Spacer(),
                   ],
                 ),
               );
