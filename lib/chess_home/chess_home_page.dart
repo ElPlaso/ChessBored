@@ -10,6 +10,7 @@ import 'package:flutter_chess_board/flutter_chess_board.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:localstorage/localstorage.dart';
 
 /// Page for the chess board view and state.
 class ChessHomePage extends StatefulWidget {
@@ -29,6 +30,8 @@ class _ChessHomePageState extends State<ChessHomePage> {
 
   final ScrollController _moveListScrollController = ScrollController();
 
+  final LocalStorage _storage = LocalStorage('unfinished_game.json');
+
   /// Scrolls the move list to the end so that the latest move is always visible.
   void _scrollMoveList() {
     _moveListScrollController.animateTo(
@@ -36,6 +39,17 @@ class _ChessHomePageState extends State<ChessHomePage> {
       curve: Curves.easeInOut,
       duration: const Duration(seconds: 1),
     );
+  }
+
+  /// Controls what happens each time a player moves.
+  void _onMove() {
+    _audioPlayer.play(AssetSource(_moveAudioPath));
+    context.read<ChessClockBloc>().add(PlayerMovedEvent());
+    _scrollMoveList();
+    _chessGame.moveCount++;
+    // Save the game to local storage each time.
+    // This is so the game can be continued if the app is closed.
+    _storage.setItem('fen_game', _chessGame.controller.getFen());
   }
 
   @override
@@ -95,7 +109,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                   }
                 },
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     RotatedBox(
@@ -109,7 +123,6 @@ class _ChessHomePageState extends State<ChessHomePage> {
                         ),
                       ),
                     ),
-                    const Spacer(),
                     if (clockState is! ChessClockOffState)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -165,12 +178,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                       controller: _chessGame.controller,
                       boardColor: state.boardTheme,
                       boardOrientation: state.boardOrientation,
-                      onMove: () {
-                        _audioPlayer.play(AssetSource(_moveAudioPath));
-                        context.read<ChessClockBloc>().add(PlayerMovedEvent());
-                        _scrollMoveList();
-                        _chessGame.moveCount++;
-                      },
+                      onMove: _onMove,
                       enableUserMoves: clockState is! ChessClockPausedState,
                     ),
                     if (clockState is! ChessClockOffState)
@@ -211,12 +219,10 @@ class _ChessHomePageState extends State<ChessHomePage> {
                               )
                             ],
                           )),
-                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(15),
                       child: ActionBar(),
                     ),
-                    const Spacer(),
                   ],
                 ),
               );

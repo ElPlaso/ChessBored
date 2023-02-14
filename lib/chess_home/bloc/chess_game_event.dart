@@ -2,6 +2,9 @@ part of 'chess_game_bloc.dart';
 
 abstract class ChessGameEvent {}
 
+/// Event sent when a game is loaded.
+class GameLoadedEvent extends ChessGameEvent {}
+
 /// Event sent when .isCheckMate() returns true for the chess board controller.
 class GameEndedByCheckmateEvent extends ChessGameEvent {}
 
