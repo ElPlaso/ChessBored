@@ -68,4 +68,14 @@ class GameHistory {
     _gameHistoryList.finishedGames.add(game);
     _storage.setItem('game_history', _gameHistoryList.toJSONEncodable());
   }
+
+  clearAll() async {
+    if (await _storage.ready) {
+      var storedList = _storage.getItem('game_history');
+      if (storedList != null) {
+        _storage.clear();
+      }
+      _gameHistoryList.finishedGames.clear();
+    }
+  }
 }

@@ -16,3 +16,5 @@ class GameSavedEvent extends GameHistoryEvent {
   GameSavedEvent(this.finishedGameWinStatus, this.gameResultType,
       this.boardTheme, this.chessBoardController, this.chessClockSettings);
 }
+
+class AllHistoryClearedEvent extends GameHistoryEvent {}

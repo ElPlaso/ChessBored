@@ -15,21 +15,36 @@ class GameHistoryPage extends StatefulWidget {
 class _GameHistoryPageState extends State<GameHistoryPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: Text(
-          'History.',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: Theme.of(context).textTheme.headlineLarge!.fontSize,
-          ),
-        ),
-      ),
-      body: BlocBuilder<GameHistoryBloc, GameHistoryState>(
-        builder: (context, state) {
-          return state is GameHistoryLoadedState
-              ? CupertinoScrollbar(
+    return BlocBuilder<GameHistoryBloc, GameHistoryState>(
+      builder: (context, state) {
+        return state is GameHistoryLoadedState
+            ? Scaffold(
+                appBar: AppBar(
+                  centerTitle: false,
+                  title: Text(
+                    'History.',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize:
+                          Theme.of(context).textTheme.headlineLarge!.fontSize,
+                    ),
+                  ),
+                  actions: [
+                    IconButton(
+                        onPressed: () {
+                          if (state.games.isNotEmpty) {
+                            _showClearHistorydialog(context);
+                          }
+                        },
+                        icon: Icon(
+                          state.games.isEmpty
+                              ? Icons.delete_outline
+                              : Icons.delete,
+                          color: Colors.black,
+                        ))
+                  ],
+                ),
+                body: CupertinoScrollbar(
                   child: ListView.builder(
                     physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
@@ -85,10 +100,37 @@ class _GameHistoryPageState extends State<GameHistoryPage> {
                       );
                     },
                   ),
-                )
-              : Container();
-        },
-      ),
+                ))
+            : Container();
+      },
     );
+  }
+
+  Future<void> _showClearHistorydialog(BuildContext context) {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext _) {
+          return AlertDialog(
+            title: const Text('Clear History?'),
+            content: const Text(
+                'This will remove all your saved games. This action cannot be undone. Are you sure you want to proceed?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<GameHistoryBloc>().add(AllHistoryClearedEvent());
+                  Navigator.pop(context);
+                },
+                child: const Text('Proceed'),
+              )
+            ],
+          );
+        });
   }
 }

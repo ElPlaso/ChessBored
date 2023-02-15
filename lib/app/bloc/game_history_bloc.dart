@@ -17,6 +17,7 @@ class GameHistoryBloc extends Bloc<GameHistoryEvent, GameHistoryState> {
   GameHistoryBloc() : super(GameHistoryInitial()) {
     on<GameHistoryLoadedEvent>(_onGameHistoryLoaded);
     on<GameSavedEvent>(_onGameSaved);
+    on<AllHistoryClearedEvent>(_onAllHistoryCleared);
   }
 
   _onGameHistoryLoaded(GameHistoryLoadedEvent event, emit) async {
@@ -37,6 +38,13 @@ class GameHistoryBloc extends Bloc<GameHistoryEvent, GameHistoryState> {
 
     emit(
       GameHistoryLoadedState(_gameHistory.gameHistory.finishedGames),
+    );
+  }
+
+  _onAllHistoryCleared(event, emit) {
+    _gameHistory.clearAll();
+    emit(
+      const GameHistoryLoadedState([]),
     );
   }
 }
