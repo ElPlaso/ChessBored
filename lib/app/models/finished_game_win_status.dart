@@ -4,6 +4,6 @@ enum FinishedGameWinStatus {
   blackVictory('Black wins'),
   draw('Draw');
 
-  final String name;
-  const FinishedGameWinStatus(this.name);
+  final String title;
+  const FinishedGameWinStatus(this.title);
 }
