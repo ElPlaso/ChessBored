@@ -194,7 +194,7 @@ class ClockSettingsMenuState extends State<ClockSettingsMenu> {
                     child: const Text('Cancel'),
                     onPressed: () {
                       if (state is ChessClockInitial) {
-                        if (state.settings.startTime == 0) {
+                        if (state.settings!.startTime == 0) {
                           context
                               .read<ChessClockBloc>()
                               .add(ChessClockToggleOnOffEvent());

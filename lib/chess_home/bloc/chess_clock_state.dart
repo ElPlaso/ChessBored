@@ -1,13 +1,14 @@
 part of 'chess_clock_bloc.dart';
 
-abstract class ChessClockState extends Equatable {}
+abstract class ChessClockState extends Equatable {
+  final ChessClockSettings? settings;
+
+  const ChessClockState(this.settings);
+}
 
 /// State for when the clock is idle.
 class ChessClockInitial extends ChessClockState {
-  // Used to show the clock start time settings when a game isn't in play.
-  final ChessClockSettings settings;
-
-  ChessClockInitial(this.settings);
+  const ChessClockInitial(super.settings);
 
   @override
   List<Object?> get props => [settings];
@@ -21,7 +22,8 @@ class ChessClockRunningState extends ChessClockState {
   /// Black's remaining time.
   final Duration blackDuration;
 
-  ChessClockRunningState(this.whiteDuration, this.blackDuration);
+  const ChessClockRunningState(
+      this.whiteDuration, this.blackDuration, super.settings);
 
   @override
   List<Object?> get props => [whiteDuration, blackDuration];
@@ -29,11 +31,14 @@ class ChessClockRunningState extends ChessClockState {
 
 /// State for when the clock is paused.
 class ChessClockPausedState extends ChessClockRunningState {
-  ChessClockPausedState(super.whiteDuration, super.blackDuration);
+  const ChessClockPausedState(
+      super.whiteDuration, super.blackDuration, super.settings);
 }
 
 /// State for when the clock is turned "off", i.e there are no clock settings.
 class ChessClockOffState extends ChessClockState {
+  const ChessClockOffState() : super(null);
+
   @override
   List<Object?> get props => [];
 }
