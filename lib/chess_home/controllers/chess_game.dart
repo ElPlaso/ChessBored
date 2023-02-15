@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chess_board/flutter_chess_board.dart';
 import 'package:get_it/get_it.dart';
+import 'package:localstorage/localstorage.dart';
 
 /// Class to register the home page's [ChessGame] as a singleton.
 class ChessGameMaker {
@@ -15,6 +16,8 @@ class ChessGameMaker {
 /// Exposes a [ChessBoardController] and the number of moves made so far.
 class ChessGame extends ChangeNotifier {
   ChessBoardController controller = ChessBoardController();
+
+  final LocalStorage _storage = LocalStorage('unfinished_game.json');
 
   /// The total number of half moves.
   ///
@@ -34,5 +37,6 @@ class ChessGame extends ChangeNotifier {
     controller.resetBoard();
     moveCount = 0;
     notifyListeners();
+    _storage.setItem('fen_game', null);
   }
 }
