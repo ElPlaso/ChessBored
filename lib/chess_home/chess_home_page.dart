@@ -1,3 +1,4 @@
+import 'package:chess_bored/app/models/finished_game_win_status.dart';
 import 'package:chess_bored/chess_home/bloc/board_view_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_clock_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_game_bloc.dart';
@@ -75,37 +76,19 @@ class _ChessHomePageState extends State<ChessHomePage> {
                     clockContext.read<ChessClockBloc>().add(
                           ChessClockPausedEvent(),
                         );
-                    switch (state.gameResult) {
-                      case GameResultType.checkmate:
-                        // The last move is the checkmating move.
-                        // Every black move is even, and every white move is odd.
-                        if (_chessGame.moveCount % 2 == 0) {
-                          _showGameOverDialog(
-                              context, "Black wins by checkmate!");
-                        } else {
-                          _showGameOverDialog(
-                              context, "White wins by checkmate!");
-                        }
-                        break;
-                      case GameResultType.stalemate:
-                        _showGameOverDialog(context, "Draw by stalemate");
-                        break;
-                      case GameResultType.insufficientMaterial:
-                        _showGameOverDialog(
-                            context, "Draw by insufficient material");
-                        break;
-                      case GameResultType.threeFoldRepitition:
-                        _showGameOverDialog(
-                            context, "Draw by three fold repitition");
-                        break;
-                      case GameResultType.flagged:
-                        if (_chessGame.moveCount % 2 == 0) {
-                          _showGameOverDialog(context, "Black wins on time");
-                        } else {
-                          _showGameOverDialog(context, "White wins on time");
-                        }
-                        break;
+                    FinishedGameWinStatus whoWon = FinishedGameWinStatus.draw;
+
+                    if (state.gameResult == GameResultType.checkmate ||
+                        state.gameResult == GameResultType.flagged) {
+                      // The last move is the winning move.
+                      // Every black move is even, and every white move is odd.
+                      if (_chessGame.moveCount % 2 == 0) {
+                        whoWon = FinishedGameWinStatus.blackVictory;
+                      } else {
+                        whoWon = FinishedGameWinStatus.whiteVictory;
+                      }
                     }
+                    _showGameOverDialog(context, whoWon, state.gameResult);
                   }
                 },
                 child: Column(
@@ -253,7 +236,28 @@ class _ChessHomePageState extends State<ChessHomePage> {
 }
 
 /// Opens a dialog to inform of the current game over state. E.g. checkmate, stalemate etc.
-Future<void> _showGameOverDialog(BuildContext context, String title) {
+Future<void> _showGameOverDialog(BuildContext context,
+    FinishedGameWinStatus whoWon, GameResultType gameResult) {
+  String title = whoWon.name;
+
+  switch (gameResult) {
+    case GameResultType.checkmate:
+      title += " by checkmate!";
+      break;
+    case GameResultType.stalemate:
+      title += " by stalemate.";
+      break;
+    case GameResultType.insufficientMaterial:
+      title += " by insufficient material.";
+      break;
+    case GameResultType.threeFoldRepitition:
+      title += " by three fold repitition.";
+      break;
+    case GameResultType.flagged:
+      title += " on time.";
+      break;
+  }
+
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
