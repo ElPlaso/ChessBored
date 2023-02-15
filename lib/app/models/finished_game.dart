@@ -11,7 +11,7 @@ class FinishedGame {
   final String gameAsFen;
 
   /// Used to store every move of the game.
-  final String gameAsSan;
+  final List<String?> gameAsSan;
 
   /// The board theme when the game was played.
   final BoardColor gameBoardTheme;

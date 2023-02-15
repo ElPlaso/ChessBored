@@ -1,3 +1,5 @@
+import 'package:chess_bored/app/bloc/game_history_bloc.dart';
+import 'package:chess_bored/app/data/game_history.dart';
 import 'package:chess_bored/chess_home/bloc/board_view_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_clock_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_game_bloc.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 void main() {
   ChessGameMaker.register();
   ChessClockMaker.register();
+  GameHistoryMaker.register();
   runApp(const ChessApp());
 }
 
@@ -40,6 +43,10 @@ class _ChessAppState extends State<ChessApp> {
         BlocProvider<ChessClockBloc>(
           create: (BuildContext context) =>
               ChessClockBloc()..add(ClockSettingsLoadedEvent()),
+        ),
+        BlocProvider<GameHistoryBloc>(
+          create: (BuildContext context) =>
+              GameHistoryBloc()..add(GameHistoryLoadedEvent()),
         ),
       ],
       child: MaterialApp(

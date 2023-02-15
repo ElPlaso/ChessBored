@@ -266,13 +266,21 @@ Future<void> _showGameOverDialog(BuildContext context,
         builder: (context, state) {
           return AlertDialog(
             title: Text(title),
+            content: const Text("Would you like to save this game?"),
             actions: [
               TextButton(
-                  onPressed: () {
-                    context.read<ChessGameBloc>().add(GameRestartedEvent());
-                    Navigator.pop(context);
-                  },
-                  child: const Text("OK"))
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("No"),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<ChessGameBloc>().add(GameRestartedEvent());
+                  Navigator.pop(context);
+                },
+                child: const Text("Yes"),
+              ),
             ],
           );
         },
