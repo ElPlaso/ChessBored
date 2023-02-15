@@ -11,7 +11,7 @@ class GameSavedEvent extends GameHistoryEvent {
   final GameResultType gameResultType;
   final BoardColor boardTheme;
   final ChessBoardController chessBoardController;
-  final ChessClockSettings chessClockSettings;
+  final ChessClockSettings? chessClockSettings;
 
   GameSavedEvent(this.finishedGameWinStatus, this.gameResultType,
       this.boardTheme, this.chessBoardController, this.chessClockSettings);

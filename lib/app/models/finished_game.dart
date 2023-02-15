@@ -17,7 +17,7 @@ class FinishedGame {
   final BoardColor gameBoardTheme;
 
   /// The clock settings of this particular game.
-  final ChessClockSettings gameClockSettings;
+  final ChessClockSettings? gameClockSettings;
 
   /// The result of the game.
   final GameResultType gameResult;
@@ -33,10 +33,11 @@ class FinishedGame {
 
     m['gameAsFen'] = gameAsFen;
     m['gameAsSan'] = gameAsSan;
-    m['gameBoardTheme'] = gameBoardTheme;
-    m['gameClockSettings'] = gameClockSettings;
-    m['gameResult'] = gameResult;
-    m['winStatu'] = winStatus;
+    m['gameBoardTheme'] = gameBoardTheme.name;
+    m['gameClockSettings'] =
+        gameClockSettings == null ? null : gameClockSettings!.toJSONEncodable();
+    m['gameResult'] = gameResult.name;
+    m['winStatus'] = winStatus.name;
 
     return m;
   }
