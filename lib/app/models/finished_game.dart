@@ -27,4 +27,17 @@ class FinishedGame {
 
   FinishedGame(this.gameAsFen, this.gameAsSan, this.gameBoardTheme,
       this.gameClockSettings, this.gameResult, this.winStatus);
+
+  toJSONEncodable() {
+    Map<String, dynamic> m = {};
+
+    m['gameAsFen'] = gameAsFen;
+    m['gameAsSan'] = gameAsSan;
+    m['gameBoardTheme'] = gameBoardTheme;
+    m['gameClockSettings'] = gameClockSettings;
+    m['gameResult'] = gameResult;
+    m['winStatu'] = winStatus;
+
+    return m;
+  }
 }
