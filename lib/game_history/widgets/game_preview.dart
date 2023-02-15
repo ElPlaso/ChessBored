@@ -20,10 +20,12 @@ class _GamePreviewState extends State<GamePreview> {
 
   @override
   Widget build(BuildContext context) {
-    return ChessBoard(
-      controller: controller,
-      enableUserMoves: false,
-      boardColor: widget.theme,
+    return IgnorePointer(
+      child: ChessBoard(
+        controller: controller,
+        enableUserMoves: false,
+        boardColor: widget.theme,
+      ),
     );
   }
 }
