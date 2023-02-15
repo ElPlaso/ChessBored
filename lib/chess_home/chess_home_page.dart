@@ -5,7 +5,6 @@ import 'package:chess_bored/chess_home/bloc/chess_clock_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_game_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/game_result_type.dart';
 import 'package:chess_bored/chess_home/controllers/chess_game.dart';
-import 'package:chess_bored/chess_home/data/chess_clock_settings.dart';
 import 'package:chess_bored/chess_home/widgets/action_bar.dart';
 import 'package:chess_bored/chess_home/widgets/move_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -242,7 +241,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
     FinishedGameWinStatus whoWon,
     GameResultType gameResult,
   ) {
-    String title = whoWon.name;
+    String title = whoWon.title;
 
     switch (gameResult) {
       case GameResultType.checkmate:
@@ -290,9 +289,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                             ),
                             TextButton(
                               onPressed: () {
-                                context
-                                    .read<ChessGameBloc>()
-                                    .add(GameRestartedEvent());
+                                ;
                                 historyContext.read<GameHistoryBloc>().add(
                                     GameSavedEvent(
                                         whoWon,
@@ -300,6 +297,9 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                         boardViewState.boardTheme,
                                         _chessGame.controller,
                                         clockState.settings));
+                                context
+                                    .read<ChessGameBloc>()
+                                    .add(GameRestartedEvent());
                                 Navigator.pop(context);
                               },
                               child: const Text("Yes"),

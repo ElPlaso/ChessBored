@@ -6,7 +6,7 @@ class ChessClockSettings {
   ChessClockSettings(this.startTime, this.incrementTime);
 
   toJSONEncodable() {
-    Map<String, dynamic> m = {};
+    Map<String, int> m = {};
 
     m['startTime'] = startTime;
     m['incrementTime'] = incrementTime;
