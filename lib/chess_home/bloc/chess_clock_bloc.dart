@@ -17,7 +17,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   final LocalStorage _storage = LocalStorage('chess_clock.json');
 
-  ChessClockBloc() : super(ChessClockOffState()) {
+  ChessClockBloc() : super(const ChessClockOffState()) {
     _chessClock.addListener(_onChessClockListen);
     _chessGame.addListener(_onChessGameListen);
     on<ClockSettingsLoadedEvent>(_onClockSettingsLoaded);
@@ -49,7 +49,7 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
     if (state is ChessClockOffState) {
       emit(ChessClockInitial(_chessClock.currentSettings));
     } else {
-      emit(ChessClockOffState());
+      emit(const ChessClockOffState());
       _saveSettingsToStorage(null);
     }
   }
@@ -76,8 +76,8 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
     } else {
       _chessClock.startBlackTime();
     }
-    emit(ChessClockRunningState(
-        _chessClock.whiteDuration, _chessClock.blackDuration));
+    emit(ChessClockRunningState(_chessClock.whiteDuration,
+        _chessClock.blackDuration, _chessClock.currentSettings));
   }
 
   _onPlayerMoved(PlayerMovedEvent event, emit) {
@@ -94,8 +94,8 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   _onTimeTicked(TimeTickedEvent event, emit) {
     // Emite state with new durations.
-    emit(ChessClockRunningState(
-        _chessClock.whiteDuration, _chessClock.blackDuration));
+    emit(ChessClockRunningState(_chessClock.whiteDuration,
+        _chessClock.blackDuration, _chessClock.currentSettings));
   }
 
   _onChessClockStopped(ChessClockStoppedEvent event, emit) {
@@ -112,8 +112,8 @@ class ChessClockBloc extends Bloc<ChessClockEvent, ChessClockState> {
 
   _onChessClockPaused(ChessClockPausedEvent event, emit) {
     _chessClock.pauseClock();
-    emit(ChessClockPausedState(
-        _chessClock.whiteDuration, _chessClock.blackDuration));
+    emit(ChessClockPausedState(_chessClock.whiteDuration,
+        _chessClock.blackDuration, _chessClock.currentSettings));
   }
 
   _saveSettingsToStorage(ChessClockSettings? settings) {

@@ -1,8 +1,11 @@
+import 'package:chess_bored/app/bloc/game_history_bloc.dart';
+import 'package:chess_bored/app/models/finished_game_win_status.dart';
 import 'package:chess_bored/chess_home/bloc/board_view_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_clock_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/chess_game_bloc.dart';
 import 'package:chess_bored/chess_home/bloc/game_result_type.dart';
 import 'package:chess_bored/chess_home/controllers/chess_game.dart';
+import 'package:chess_bored/chess_home/data/chess_clock_settings.dart';
 import 'package:chess_bored/chess_home/widgets/action_bar.dart';
 import 'package:chess_bored/chess_home/widgets/move_list.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,37 +78,19 @@ class _ChessHomePageState extends State<ChessHomePage> {
                     clockContext.read<ChessClockBloc>().add(
                           ChessClockPausedEvent(),
                         );
-                    switch (state.gameResult) {
-                      case GameResultType.checkmate:
-                        // The last move is the checkmating move.
-                        // Every black move is even, and every white move is odd.
-                        if (_chessGame.moveCount % 2 == 0) {
-                          _showGameOverDialog(
-                              context, "Black wins by checkmate!");
-                        } else {
-                          _showGameOverDialog(
-                              context, "White wins by checkmate!");
-                        }
-                        break;
-                      case GameResultType.stalemate:
-                        _showGameOverDialog(context, "Draw by stalemate");
-                        break;
-                      case GameResultType.insufficientMaterial:
-                        _showGameOverDialog(
-                            context, "Draw by insufficient material");
-                        break;
-                      case GameResultType.threeFoldRepitition:
-                        _showGameOverDialog(
-                            context, "Draw by three fold repitition");
-                        break;
-                      case GameResultType.flagged:
-                        if (_chessGame.moveCount % 2 == 0) {
-                          _showGameOverDialog(context, "Black wins on time");
-                        } else {
-                          _showGameOverDialog(context, "White wins on time");
-                        }
-                        break;
+                    FinishedGameWinStatus whoWon = FinishedGameWinStatus.draw;
+
+                    if (state.gameResult == GameResultType.checkmate ||
+                        state.gameResult == GameResultType.flagged) {
+                      // The last move is the winning move.
+                      // Every black move is even, and every white move is odd.
+                      if (_chessGame.moveCount % 2 == 0) {
+                        whoWon = FinishedGameWinStatus.blackVictory;
+                      } else {
+                        whoWon = FinishedGameWinStatus.whiteVictory;
+                      }
                     }
+                    _showGameOverDialog(context, whoWon, state.gameResult);
                   }
                 },
                 child: Column(
@@ -147,7 +132,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                           : clockState is ChessClockInitial
                                               ? Duration(
                                                   minutes: clockState
-                                                      .settings.startTime)
+                                                      .settings!.startTime)
                                               : const Duration(seconds: 0),
                                       clockState is! ChessClockRunningState
                                           ? false
@@ -158,7 +143,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                 ),
                                 if (clockState is ChessClockInitial)
                                   Text(
-                                    "  + ${clockState.settings.incrementTime}",
+                                    "  + ${clockState.settings!.incrementTime}",
                                   ),
                               ],
                             ),
@@ -196,7 +181,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                 children: [
                                   if (clockState is ChessClockInitial)
                                     Text(
-                                      "+ ${clockState.settings.incrementTime}  ",
+                                      "+ ${clockState.settings!.incrementTime}  ",
                                     ),
                                   _buildDurationDisplay(
                                       clockState is ChessClockRunningState
@@ -207,7 +192,7 @@ class _ChessHomePageState extends State<ChessHomePage> {
                                           : clockState is ChessClockInitial
                                               ? Duration(
                                                   minutes: clockState
-                                                      .settings.startTime)
+                                                      .settings!.startTime)
                                               : const Duration(seconds: 0),
                                       clockState is! ChessClockRunningState
                                           ? false
@@ -250,29 +235,86 @@ class _ChessHomePageState extends State<ChessHomePage> {
       ),
     );
   }
-}
 
-/// Opens a dialog to inform of the current game over state. E.g. checkmate, stalemate etc.
-Future<void> _showGameOverDialog(BuildContext context, String title) {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext _) {
-      return BlocBuilder<ChessGameBloc, ChessGameState>(
-        builder: (context, state) {
-          return AlertDialog(
-            title: Text(title),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    context.read<ChessGameBloc>().add(GameRestartedEvent());
-                    Navigator.pop(context);
+  /// Opens a dialog to inform of the current game over state. E.g. checkmate, stalemate etc.
+  Future<void> _showGameOverDialog(
+    BuildContext context,
+    FinishedGameWinStatus whoWon,
+    GameResultType gameResult,
+  ) {
+    String title = whoWon.name;
+
+    switch (gameResult) {
+      case GameResultType.checkmate:
+        title += " by checkmate!";
+        break;
+      case GameResultType.stalemate:
+        title += " by stalemate.";
+        break;
+      case GameResultType.insufficientMaterial:
+        title += " by insufficient material.";
+        break;
+      case GameResultType.threeFoldRepitition:
+        title += " by three fold repitition.";
+        break;
+      case GameResultType.flagged:
+        title += " on time.";
+        break;
+    }
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext _) {
+        return BlocBuilder<ChessGameBloc, ChessGameState>(
+          builder: (context, state) {
+            return BlocBuilder<GameHistoryBloc, GameHistoryState>(
+              builder: (historyContext, historyState) {
+                return BlocBuilder<BoardViewBloc, BoardViewState>(
+                  builder: (boardViewContext, boardViewState) {
+                    return BlocBuilder<ChessClockBloc, ChessClockState>(
+                      builder: (clockContext, clockState) {
+                        return AlertDialog(
+                          title: Text(title),
+                          content:
+                              const Text("Would you like to save this game?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                context
+                                    .read<ChessGameBloc>()
+                                    .add(GameRestartedEvent());
+                              },
+                              child: const Text("No"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context
+                                    .read<ChessGameBloc>()
+                                    .add(GameRestartedEvent());
+                                historyContext.read<GameHistoryBloc>().add(
+                                    GameSavedEvent(
+                                        whoWon,
+                                        gameResult,
+                                        boardViewState.boardTheme,
+                                        _chessGame.controller,
+                                        clockState.settings));
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Yes"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
-                  child: const Text("OK"))
-            ],
-          );
-        },
-      );
-    },
-  );
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 }
