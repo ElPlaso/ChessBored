@@ -51,10 +51,12 @@ class GameHistory {
               finishedGame['gameAsFen'],
               List<String?>.from(finishedGame['gameAsSan']),
               themeMap[finishedGame['gameBoardTheme']]!,
-              ChessClockSettings(
-                finishedGame['gameClockSettings']['startTime'],
-                finishedGame['gameClockSettings']['incrementTime'],
-              ),
+              finishedGame['gameClockSettings'] == null
+                  ? null
+                  : ChessClockSettings(
+                      finishedGame['gameClockSettings']['startTime'],
+                      finishedGame['gameClockSettings']['incrementTime'],
+                    ),
               resultMap[finishedGame['gameResult']]!,
               winnerMap[finishedGame['winStatus']]!,
             ),
