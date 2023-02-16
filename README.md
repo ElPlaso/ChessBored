@@ -16,5 +16,7 @@ This project aims to create a good user experience as well as provide some extra
 <div>
 <img src='https://github.com/ElPlaso/ChessBored/blob/master/github_images/screen_cap.png' width=33% height=33%>
 <img src='https://github.com/ElPlaso/ChessBored/blob/master/github_images/screen_cap_2.png' width=33% height=33%>
+<br>
 <img src='https://github.com/ElPlaso/ChessBored/blob/master/github_images/screen_cap_3.png' width=33% height=33%>
+<img src='https://github.com/ElPlaso/ChessBored/blob/master/github_images/screen_cap_4.png' width=33% height=33%>
 </div>
