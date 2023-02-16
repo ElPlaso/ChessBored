@@ -74,9 +74,12 @@ class _ChessHomePageState extends State<ChessHomePage> {
               return BlocListener<ChessGameBloc, ChessGameState>(
                 listener: (context, state) {
                   if (state is GameOverState) {
-                    clockContext.read<ChessClockBloc>().add(
-                          ChessClockPausedEvent(),
-                        );
+                    if (clockState is! ChessClockOffState) {
+                      clockContext.read<ChessClockBloc>().add(
+                            ChessClockPausedEvent(),
+                          );
+                    }
+
                     FinishedGameWinStatus whoWon = FinishedGameWinStatus.draw;
 
                     if (state.gameResult == GameResultType.checkmate ||
