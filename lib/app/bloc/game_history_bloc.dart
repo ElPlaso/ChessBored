@@ -21,8 +21,11 @@ class GameHistoryBloc extends Bloc<GameHistoryEvent, GameHistoryState> {
   }
 
   _onGameHistoryLoaded(GameHistoryLoadedEvent event, emit) async {
-    await _gameHistory.loadGameHistory();
-    emit(GameHistoryLoadedState(_gameHistory.gameHistory.finishedGames));
+    if (state is GameHistoryInitial) {
+      await _gameHistory.loadGameHistory();
+    }
+    emit(GameHistoryLoadedState(
+        _gameHistory.gameHistory.finishedGames.reversed.toList()));
   }
 
   _onGameSaved(GameSavedEvent event, emit) {
@@ -36,9 +39,7 @@ class GameHistoryBloc extends Bloc<GameHistoryEvent, GameHistoryState> {
 
     _gameHistory.saveGameToList(game);
 
-    emit(
-      GameHistoryLoadedState(_gameHistory.gameHistory.finishedGames),
-    );
+    emit(GameSavedState());
   }
 
   _onAllHistoryCleared(event, emit) {

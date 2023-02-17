@@ -9,6 +9,7 @@ import 'package:chess_bored/game_history/game_history_page.dart';
 import 'package:flutter/material.dart';
 import 'package:chess_bored/chess_home/chess_home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:badges/badges.dart' as badges;
 
 void main() {
   ChessGameMaker.register();
@@ -53,29 +54,43 @@ class _ChessAppState extends State<ChessApp> {
         debugShowCheckedModeBanner: false,
         title: 'ChessBored',
         theme: ThemeData(colorSchemeSeed: Colors.brown, useMaterial3: true),
-        home: Scaffold(
-          body: <Widget>[
-            const ChessHomePage(title: 'ChessBored.'),
-            const GameHistoryPage(),
-          ][_currentPageIndex],
-          bottomNavigationBar: NavigationBar(
-            onDestinationSelected: (int index) {
-              setState(() {
-                _currentPageIndex = index;
-              });
-            },
-            selectedIndex: _currentPageIndex,
-            destinations: const <Widget>[
-              NavigationDestination(
-                icon: Icon(Icons.home),
-                label: 'Play',
+        home: BlocBuilder<GameHistoryBloc, GameHistoryState>(
+          builder: (context, state) {
+            return Scaffold(
+              body: <Widget>[
+                const ChessHomePage(title: 'ChessBored.'),
+                const GameHistoryPage(),
+              ][_currentPageIndex],
+              bottomNavigationBar: NavigationBar(
+                onDestinationSelected: (int index) {
+                  setState(() {
+                    _currentPageIndex = index;
+                    if (index == 1) {
+                      context
+                          .read<GameHistoryBloc>()
+                          .add(GameHistoryLoadedEvent());
+                    }
+                  });
+                },
+                selectedIndex: _currentPageIndex,
+                destinations: <Widget>[
+                  const NavigationDestination(
+                    icon: Icon(Icons.home),
+                    label: 'Play',
+                  ),
+                  NavigationDestination(
+                    icon: state is GameSavedState
+                        ? const badges.Badge(
+                            badgeContent: null,
+                            child: Icon(Icons.menu_book),
+                          )
+                        : const Icon(Icons.menu_book),
+                    label: 'History',
+                  ),
+                ],
               ),
-              NavigationDestination(
-                icon: Icon(Icons.menu_book),
-                label: 'History',
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

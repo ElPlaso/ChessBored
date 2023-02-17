@@ -17,3 +17,5 @@ class GameHistoryLoadedState extends GameHistoryState {
   @override
   List<Object> get props => games;
 }
+
+class GameSavedState extends GameHistoryState {}
